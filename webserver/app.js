@@ -22,11 +22,24 @@ app.get('/', (req, res) => {
 	res.sendFile(indexhtmlPath);
 });
 
-// Serve index.js with index.html
-app.get('/index.js', (req, res) => {
-	console.log('Serving index.js');
-	var indexjsPath = path.resolve(__dirname, './src/pages/index.js');
+// Serve style.css with index.html
+app.get('/style.css', (req, res) => {
+	console.log('Serving style.css');
+	var indexjsPath = path.resolve(__dirname, './src/pages/style.css');
 	res.sendFile(indexjsPath);
+});
+
+app.get('/assets/logo.png', (req, res) => {
+	console.log('Serving ClearNav logo.js');
+	var indexjsPath = path.resolve(__dirname, './src/assets/logo.png');
+	res.sendFile(indexjsPath);
+});
+
+// Serve settings page at /settings
+app.get('/settings', (req, res) => {
+	console.log('Serving the default page');
+	var indexhtmlPath = path.resolve(__dirname, './src/pages/index.html');
+	res.sendFile(indexhtmlPath);
 });
 
 // Handle requests related to settings
