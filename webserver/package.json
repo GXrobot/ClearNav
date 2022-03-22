@@ -1,0 +1,22 @@
+{
+  "name": "webserver",
+  "version": "0.0.1",
+  "description": "A webserver",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GXrobot/ClearNav.git"
+  },
+  "author": "ClearNav",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GXrobot/ClearNav/issues"
+  },
+  "homepage": "https://github.com/GXrobot/ClearNav#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
