@@ -5,6 +5,8 @@ const path = require('path');
 
 const setHeaders = require('./src/middlewares/setHeaders');
 const updateRouter = require('./src/routes/update');
+const assetsRouter = require('./src/routes/assets');
+const pagesRouter = require('./src/routes/pages');
 
 // Define the server
 const app = express();
@@ -15,41 +17,14 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.set("port", port);
 
-// Serve a default page when requesting the root of the server
-app.get('/', (req, res) => {
-	console.log('Serving the default page');
-	var indexhtmlPath = path.resolve(__dirname, './src/pages/index.html');
-	res.sendFile(indexhtmlPath);
-});
-
-// Serve style.css with index.html
-app.get('/style.css', (req, res) => {
-	console.log('Serving style.css');
-	var indexjsPath = path.resolve(__dirname, './src/pages/style.css');
-	res.sendFile(indexjsPath);
-});
-
-app.get('/assets/logo.png', (req, res) => {
-	console.log('Serving ClearNav logo.js');
-	var indexjsPath = path.resolve(__dirname, './src/assets/logo.png');
-	res.sendFile(indexjsPath);
-});
-
-// Serve settings page at /settings
-app.get('/settings', (req, res) => {
-	console.log('Serving the default page');
-	var indexhtmlPath = path.resolve(__dirname, './src/pages/index.html');
-	res.sendFile(indexhtmlPath);
-});
+// Serve requests for assets
+app.use('/assets', assetsRouter);
 
 // Handle requests related to settings
 app.use('/update', updateRouter);
 
-// Return an error for all other requests
-app.all('/*', (req, res) => {
-	console.log(`Received an invalid ${req.method} request for '${req.hostname}${req.originalUrl}' from ${req.ip} in app.js`)
-	res.sendStatus(418);
-});
+// All other requests are either asking for pages (e.g.: index.html) or should return an error
+app.use('/*', pagesRouter);
 
 // Start the server
 const server = http.createServer(app);
