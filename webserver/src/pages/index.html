@@ -9,6 +9,10 @@
 	</head>
 
 	<body>
+        <div id="nav_search">
+            <input id="nav_search_bar" type="text" placeholder="Where do you want to go" />
+            <button id="nav_start_button" onclick="StartNavigation()">Start</button>
+        </div>
 		<form class="getUpdate" method="get" onsubmit="getEZhudSettings();return false">
 			<fieldset>
 				<legend>Get Update</legend>
@@ -21,6 +25,6 @@
 				<input type="submit" name="pushUpdate" value="Push Update" />
 			</fieldset>
 		</form>
-	</body>
+    </body>
 
 </html>

@@ -29,7 +29,6 @@ function getEZhudSettings() {
 	// Send the request
 	console.log("Sending GET update");
 	xhttp.send();
-
 }
 
 // This function sends updated settings to the server
@@ -63,3 +62,27 @@ function sendEZhudSettings() {
 	xhttp.send(updatedSettings)
 }
 
+// executed when the "Start" button on the navigation page is pressed
+function StartNavigation() {
+    const loc = document.getElementById("nav_search_bar").value;
+
+    // open google maps app
+    // form query formatted string
+    // var address = 8888;
+    // var street = " University Dr";
+    // var city = " Burnaby";
+    // var prov = " BC";
+    var mode = "&mode=d";
+
+
+    // form "turn-by-turn navigation" intent
+    // q: sets the end point for the navigation search (the address)
+    // mode: sets the method of transportation
+    // var destination = "google.navigation:q=" + address + street + city + prov + mode;
+
+    var destination = "google.navigation:q=" + loc + mode;
+	console.log("starting navigation to", loc);
+
+    // open google maps with navigation started
+    window.open(destination,"_blank");
+}
