@@ -1,4 +1,4 @@
-angeInput = document.getElementById("range");
+rangeInput = document.getElementById("range");
 container = document
     .getElementsByClassName("container")[0];
     

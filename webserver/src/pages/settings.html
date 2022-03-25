@@ -1,186 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html class="bg-dark">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="./brightness_level.css">
+<link rel="stylesheet" href="./ui_settings.css">
+<script src="./brightness.js"></script>
+<script src="./code_settings.js"></script>
+
 <title>GeneralSettings</title>
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
 
-
-/* Fixed sidenav, full height */
-
-
-/* Style the sidenav links and the dropdown button */
-.sidenav a, .dropdown-btn {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  font-size: 20px;
-  color: #818181;
-  display: block;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  outline: none;
-}
-
-/* On mouse-over */
-.sidenav a:hover, .dropdown-btn:hover {
-  color: #f1f1f1;
-}
-
-/* Main content */
-.main {
-  margin-left: 200px; /* Same as the width of the sidenav */
-  font-size: 20px; /* Increased text to enable scrolling */
-  padding: 0px 10px;
-}
-
-/* Add an active class to the active dropdown button */
-.active {
-  background-color: green;
-  color: white;
-}
-
-/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
-.dropdown-container {
-  display: none;
-  background-color: #262626;
-  padding-left: 8px;
-}
-
-/* Optional: Style the caret down icon */
-.fa-caret-down {
-  float: right;
-  padding-right: 8px;
-}
-
-/* Full-width input fields */
-input[type=text], input[type=password] {
-  width: 50%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-
-  
-}
-
-/* Set a style for all buttons */
-button {
-  background-color: #04AA6D;
-  color: white;
-  padding: 10px 80px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 50%;
-}
-
-button:hover {
-  opacity: 0.8;
-}
-
-/* Extra styles for the cancel button */
-.cancelbtn {
-  width: auto;
-  padding: 10px 18px;
-  background-color: #f44336;
-}
-
-/* Center the image and position the close button */
-.imgcontainer {
-  text-align: center;
-  margin: 24px 0 12px 0;
-  position: relative;
-}
-
-img.avatar {
-  width: 40%;
-  border-radius: 50%;
-}
-
-.container {
-  padding: 16px;
-}
-
-span.psw {
-  float: right;
-  padding-top: 16px;
-}
-
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  padding-top: 60px;
-}
-
-/* Modal Content/Box */
-.modal-content {
-  background-color: #fefefe;
-  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button (x) */
-.close {
-  position: absolute;
-  right: 25px;
-  top: 0;
-  color: #000;
-  font-size: 35px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: red;
-  cursor: pointer;
-}
-
-/* Add Zoom Animation */
-.animate {
-  -webkit-animation: animatezoom 0.6s;
-  animation: animatezoom 0.6s
-}
-
-@-webkit-keyframes animatezoom {
-  from {-webkit-transform: scale(0)} 
-  to {-webkit-transform: scale(1)}
-}
-  
-@keyframes animatezoom {
-  from {transform: scale(0)} 
-  to {transform: scale(1)}
-}
-
-/* Some media queries for responsiveness */
-@media screen and (max-height: 450px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-</style>
 </head>
 <body>
 
+   <!-- ...............................Wifi country..................................................... -->
+
 <div class="sidenav">
 
-  <label for="country-names">Wifi Country:</label>
+  <label for="country-names"><b>Wifi Country:</b></label>
 <select name="country-names" id="country-names">
    <option value="AF">Afghanistan</option>
     <option value="AX">Aland Islands</option>
@@ -438,22 +275,27 @@ span.psw {
 </select>
 <br><br>
 
- <label for="mode-names">Wifi Mode:</label>
+ <!-- ...............................Wifi Mode..................................................... -->
+
+ <label for="mode-names"><b>Wifi Mode:</b></label>
 <select name="mode-names" id="mode-names">
  	<option value="client">Client</option>
     <option value="hotspot">Hotspot</option>
 </select>
  <br><br>
  
-  <label for="bright-names">Brightness Mode:</label>
+ <!-- ...............................Brightness Mode..................................................... -->
+  <label for="bright-names"><b>Brightness Mode:</b></label>
 <select name="bright-names" id="bright-names">
  	<option value="day">Day</option>
     <option value="night">Night</option>
 </select>
 
+ <!-- ...............................Brightness levels..................................................... -->
+
   <h3>Brightness Level</h3>
 
-   <div class="container">
+   <div class="brightness-container">
     <div class="brightness-box">
         <i class="far fa-sun"></i>
         <input type="range" id="range" min="10" max="100" value="100">
@@ -461,75 +303,37 @@ span.psw {
     </div>
 </div>
    
- <br><br><br><br>
-<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login Settings</button>
+ <!-- ...............................Wifi settings..................................................... -->
+
+ <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Wifi Settings</button>
 
 <div id="id01" class="modal">
   
   <form class="modal-content animate" action="/action_page.php" method="post">
     <div class="imgcontainer">
       <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-      <img src="./assets/img_avatar2.png" alt="Avatar" class="avatar">
+      <img src="../assets/img_avatar2.png" alt="Avatar" class="avatar">
     </div>
 
     <div class="container">
-      <label for="uname"><b>Wifi_ssid</b></label>
-
-      <input type="text" placeholder="Enter Username" name="uname" required>
-    </div>
-    
-    <div class="container">
-      <label for="psw"><b>Wifi_psk</b></label>
-      <input type="password" placeholder="Enter Password" name="psw" required>
-    </div>
-    <div class="container">
-      <button type="submit">Login</button>
-      <label>
-        <input type="checkbox" checked="checked" name="remember"> Remember me
-      </label>
+      <label for="ssid"><b>Wifi SSID</b></label>
+      <input type="text" placeholder="Enter Wifi SSID" name="ssid" required>
     </div>
 
-    <div class="container" style="background-color:#f1f1f1">
-      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-      <span class="psw">Forgot <a href="#">password?</a></span>
+
+    <div class="container"></div>
+      <label for="psw"><b>Wifi PSK</b></label> 
+      <input type="password" placeholder="Enter Wifi PSK" name="psw" required>
+      <button type="submit">Enter</button>
+      
     </div>
+
   </form>
 </div>
 
-<script>
-// Get the modal
-var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-</script>
- 
- 
 </div>
 
 
-
-<script>
-/* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
-var dropdown = document.getElementsByClassName("dropdown-btn");
-var i;
-
-for (i = 0; i < dropdown.length; i++) {
-  dropdown[i].addEventListener("click", function() {
-  this.classList.toggle("active");
-  var dropdownContent = this.nextElementSibling;
-  if (dropdownContent.style.display === "block") {
-  dropdownContent.style.display = "none";
-  } else {
-  dropdownContent.style.display = "block";
-  }
-  });
-}
-</script>
 
 </body>
 </html> 
