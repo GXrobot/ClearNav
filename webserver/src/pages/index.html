@@ -4,15 +4,18 @@
 
 	<head>
 		<meta charset="UTF-8" />
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsy3iqecB2CesVLz5DNvZQzt7PEezQLD0&libraries=places"> </script>
+        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsy3iqecB2CesVLz5DNvZQzt7PEezQLD0&libraries=places"></script> -->
 		<script type="text/javascript" src="/index.js"></script>
 		<title>Test Page</title>
 	</head>
 
 	<body>
-        <div id="nav_search">
-            <input id="nav_search_bar" type="text" placeholder="Where do you want to go" />
-            <button id="nav_start_button" onclick="StartNavigation()">Start</button>
-        </div>
+        <input id="searchTextField_prod" type="text" size="50" placeholder="I'm paying for this query...">
+        <button id="nav_start_button_prod" onclick="StartNavigation_Prod()">Start</button>
+        <br>
+        <input id="searchTextField_dev" type="text" size="50" placeholder="Use this one...">
+        <button id="nav_start_button_dev" onclick="StartNavigation_Dev()">Start</button>
 		<form class="getUpdate" method="get" onsubmit="getEZhudSettings();return false">
 			<fieldset>
 				<legend>Get Update</legend>

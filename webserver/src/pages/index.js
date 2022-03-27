@@ -62,24 +62,58 @@ function sendEZhudSettings() {
 	xhttp.send(updatedSettings)
 }
 
+var addr = "";
+
+// listen for google maps event on search bar
+google.maps.event.addDomListener(window, 'load', function() {
+    var input = document.getElementById('searchTextField');
+
+    // Get the place details from the autocomplete object.
+    autocomplete = new google.maps.places.Autocomplete(input);
+
+    // only results from canada...
+    // can change later
+    autocomplete.setComponentRestrictions({
+        country: ["ca"],
+    });
+
+    // when you press on an autocompleted location
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var place = autocomplete.getPlace();
+        var address = place.formatted_address;
+        addr = address;
+
+        var log = "Autocompleted address: " + address;
+        console.log("log: ", log);
+        // var latitude = place.geometry.location.lat();
+        // var longitude = place.geometry.location.lng();
+    });
+});
+
 // executed when the "Start" button on the navigation page is pressed
-function StartNavigation() {
-    const loc = document.getElementById("nav_search_bar").value;
-
+function StartNavigation_Prod() {
     // open google maps app
-    // form query formatted string
-    // var address = 8888;
-    // var street = " University Dr";
-    // var city = " Burnaby";
-    // var prov = " BC";
     var mode = "&mode=d";
-
 
     // form "turn-by-turn navigation" intent
     // q: sets the end point for the navigation search (the address)
     // mode: sets the method of transportation
-    // var destination = "google.navigation:q=" + address + street + city + prov + mode;
+    var destination = "google.navigation:q=" + addr + mode;
+	console.log("starting navigation to", addr);
 
+    // open google maps with navigation started
+    window.open(destination,"_blank");
+}
+
+function StartNavigation_Dev() {
+    const loc = document.getElementById("searchTextField_dev").value;
+
+    // open google maps app
+    var mode = "&mode=d";
+
+    // form "turn-by-turn navigation" intent
+    // q: sets the end point for the navigation search (the address)
+    // mode: sets the method of transportation
     var destination = "google.navigation:q=" + loc + mode;
 	console.log("starting navigation to", loc);
 
