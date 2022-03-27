@@ -1,7 +1,6 @@
 // Example/debugging code for server backend communication
 
 var baseUrl = "http://10.0.0.18:8080";
-
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
 // This function queries the server for updated settings
@@ -23,9 +22,7 @@ function getEZhudSettings() {
 			retData = JSON.parse(this.responseText);
 			// Do something useful with the data...
 			console.log(retData);
-		}
-	};
-
+		} };
 	// Send the request
 	console.log("Sending GET update");
 	xhttp.send();
@@ -62,33 +59,58 @@ function sendEZhudSettings() {
 	xhttp.send(updatedSettings)
 }
 
-var addr = "";
+// variables for initMap()
+let map;
+let service;
+let infowindow;
 
-// listen for google maps event on search bar
-google.maps.event.addDomListener(window, 'load', function() {
-    var input = document.getElementById('searchTextField');
+// initialize the map widget
+// After clicking autocompleted address, show marker on map
+function initMap() {
 
-    // Get the place details from the autocomplete object.
-    autocomplete = new google.maps.places.Autocomplete(input);
+    var input = document.getElementById('searchTextField_prod');
 
-    // only results from canada...
-    // can change later
+    // start map at sfu :)
+    const sfu = new google.maps.LatLng(49.2781, -122.9199);
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: sfu,
+        zoom: 12,
+    });
+
+    // infowindow on marker
+    const infowindow = new google.maps.InfoWindow();
+    const infowindowContent = document.getElementById("infowindow-content");
+    infowindow.setContent(infowindowContent);
+
+    // autocomplete instance in search bar
+    const autocomplete = new google.maps.places.Autocomplete(input);
     autocomplete.setComponentRestrictions({
         country: ["ca"],
     });
 
-    // when you press on an autocompleted location
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        var address = place.formatted_address;
-        addr = address;
-
-        var log = "Autocompleted address: " + address;
-        console.log("log: ", log);
-        // var latitude = place.geometry.location.lat();
-        // var longitude = place.geometry.location.lng();
+    // marker instance 
+    const marker = new google.maps.Marker({
+        map,
+        anchorPoint: new google.maps.Point(0, -29),
     });
-});
+
+    // listener for when we click on autocompleted address
+    autocomplete.addListener("place_changed", () => {
+        infowindow.close();
+        marker.setVisible(false);
+
+        // pull up the new marker
+        const place = autocomplete.getPlace();
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+        infowindowContent.children["place-name"].textContent = place.name;
+        infowindowContent.children["place-address"].textContent = place.formatted_address;
+        infowindow.open(map, marker);
+        var log = "Autocompleted address: " + place.formatted_address;
+        console.log("log: ", log);
+    });
+}
+
 
 // executed when the "Start" button on the navigation page is pressed
 function StartNavigation_Prod() {
@@ -116,6 +138,7 @@ function StartNavigation_Dev() {
     // mode: sets the method of transportation
     var destination = "google.navigation:q=" + loc + mode;
 	console.log("starting navigation to", loc);
+	// console.log("log: ", prod_server);
 
     // open google maps with navigation started
     window.open(destination,"_blank");

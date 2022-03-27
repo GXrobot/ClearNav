@@ -4,8 +4,15 @@
 
 	<head>
 		<meta charset="UTF-8" />
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsy3iqecB2CesVLz5DNvZQzt7PEezQLD0&libraries=places"> </script>
-        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsy3iqecB2CesVLz5DNvZQzt7PEezQLD0&libraries=places"></script> -->
+        <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsy3iqecB2CesVLz5DNvZQzt7PEezQLD0&libraries=places&callback=initMap" async defer> </script> -->
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <style type="text/css">
+            html { height: 100% }
+            body { height: 100%; margin: 0; padding: 0 }
+            #map { height: 100% }
+        </style>
+        <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> -->
+        <!-- <link rel="stylesheet" type="text/css" href="./style.css"> -->
 		<script type="text/javascript" src="/index.js"></script>
 		<title>Test Page</title>
 	</head>
@@ -16,6 +23,14 @@
         <br>
         <input id="searchTextField_dev" type="text" size="50" placeholder="Use this one...">
         <button id="nav_start_button_dev" onclick="StartNavigation_Dev()">Start</button>
+        <div id="map" style="width:50%; height:50%;"></div>
+        <div id="infowindow-content">
+            <span id="place-name" class="title"></span><br />
+            <span id="place-address"></span>
+        </div>
+
+
+
 		<form class="getUpdate" method="get" onsubmit="getEZhudSettings();return false">
 			<fieldset>
 				<legend>Get Update</legend>
@@ -28,6 +43,8 @@
 				<input type="submit" name="pushUpdate" value="Push Update" />
 			</fieldset>
 		</form>
+        <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsy3iqecB2CesVLz5DNvZQzt7PEezQLD0&callback=initMap&libraries=places&v=weekly" async ></script>
     </body>
 
 </html>
