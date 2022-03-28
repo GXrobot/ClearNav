@@ -8,3 +8,8 @@
   height: 60px;
   background-color: white;
 }
+
+.bottom-nav {
+  position: absolute !important;
+  bottom: 0;
+}
