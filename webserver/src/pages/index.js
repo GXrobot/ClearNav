@@ -1,5 +1,7 @@
 // Example/debugging code for server backend communication
 
+const debug = true;
+
 var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
@@ -68,67 +70,53 @@ let infowindow;
 // After clicking autocompleted address, show marker on map
 function initMap() {
 
-    var input = document.getElementById('searchTextField_prod');
+    var input = document.getElementById('searchTextField');
 
-    // start map at sfu :)
-    const sfu = new google.maps.LatLng(49.2781, -122.9199);
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: sfu,
-        zoom: 12,
-    });
+    // production server has map stuff and address autocomplete
+    if (!debug) {
+        const sfu = new google.maps.LatLng(49.2781, -122.9199);
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: sfu,
+            zoom: 12,
+        });
 
-    // infowindow on marker
-    const infowindow = new google.maps.InfoWindow();
-    const infowindowContent = document.getElementById("infowindow-content");
-    infowindow.setContent(infowindowContent);
+        // infowindow on marker
+        const infowindow = new google.maps.InfoWindow();
+        const infowindowContent = document.getElementById("infowindow-content");
+        infowindow.setContent(infowindowContent);
 
-    // autocomplete instance in search bar
-    const autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.setComponentRestrictions({
-        country: ["ca"],
-    });
+        // autocomplete instance in search bar
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.setComponentRestrictions({
+            country: ["ca"],
+        });
 
-    // marker instance 
-    const marker = new google.maps.Marker({
-        map,
-        anchorPoint: new google.maps.Point(0, -29),
-    });
+        // marker instance 
+        const marker = new google.maps.Marker({
+            map,
+            anchorPoint: new google.maps.Point(0, -29),
+        });
 
-    // listener for when we click on autocompleted address
-    autocomplete.addListener("place_changed", () => {
-        infowindow.close();
-        marker.setVisible(false);
+        // listener for when we click on autocompleted address
+        autocomplete.addListener("place_changed", () => {
+            infowindow.close();
+            marker.setVisible(false);
 
-        // pull up the new marker
-        const place = autocomplete.getPlace();
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
-        infowindowContent.children["place-name"].textContent = place.name;
-        infowindowContent.children["place-address"].textContent = place.formatted_address;
-        infowindow.open(map, marker);
-        var log = "Autocompleted address: " + place.formatted_address;
-        console.log("log: ", log);
-    });
+            // pull up the new marker
+            const place = autocomplete.getPlace();
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+            infowindowContent.children["place-name"].textContent = place.name;
+            infowindowContent.children["place-address"].textContent = place.formatted_address;
+            infowindow.open(map, marker);
+            var log = "Autocompleted address: " + place.formatted_address;
+            console.log("log: ", log);
+        });
+    }
 }
 
-
-// executed when the "Start" button on the navigation page is pressed
-function StartNavigation_Prod() {
-    // open google maps app
-    var mode = "&mode=d";
-
-    // form "turn-by-turn navigation" intent
-    // q: sets the end point for the navigation search (the address)
-    // mode: sets the method of transportation
-    var destination = "google.navigation:q=" + addr + mode;
-	console.log("starting navigation to", addr);
-
-    // open google maps with navigation started
-    window.open(destination,"_blank");
-}
-
-function StartNavigation_Dev() {
-    const loc = document.getElementById("searchTextField_dev").value;
+function StartNavigation() {
+    const loc = document.getElementById("searchTextField").value;
 
     // open google maps app
     var mode = "&mode=d";
@@ -138,7 +126,6 @@ function StartNavigation_Dev() {
     // mode: sets the method of transportation
     var destination = "google.navigation:q=" + loc + mode;
 	console.log("starting navigation to", loc);
-	// console.log("log: ", prod_server);
 
     // open google maps with navigation started
     window.open(destination,"_blank");

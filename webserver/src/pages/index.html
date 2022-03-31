@@ -18,18 +18,14 @@
 	</head>
 
 	<body>
-        <input id="searchTextField_prod" type="text" size="50" placeholder="I'm paying for this query...">
-        <button id="nav_start_button_prod" onclick="StartNavigation_Prod()">Start</button>
+        <input id="searchTextField" type="text" size="50" placeholder="Where do you want to go?" value="8888 University Dr, Burnaby, BC V5A 1S6">
+        <button id="navStartButton" onclick="StartNavigation()">Start</button>
         <br>
-        <input id="searchTextField_dev" type="text" size="50" placeholder="Use this one...">
-        <button id="nav_start_button_dev" onclick="StartNavigation_Dev()">Start</button>
         <div id="map" style="width:50%; height:50%;"></div>
         <div id="infowindow-content">
             <span id="place-name" class="title"></span><br />
             <span id="place-address"></span>
         </div>
-
-
 
 		<form class="getUpdate" method="get" onsubmit="getEZhudSettings();return false">
 			<fieldset>
