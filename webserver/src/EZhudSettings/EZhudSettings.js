@@ -1,10 +1,11 @@
 const fs = require('fs');
+const {execSync} = require('child_process');
 
 // Gets all system settings supported by the mobile application in JSON format
 function getEZhudSettings() {
 
 	console.log('getEZhudSettings() called');
-	
+
 	// TBD: Actually get settings...
 
 	var currentSettings = {
@@ -17,7 +18,7 @@ function getEZhudSettings() {
 	};
 
 	console.log(`getEZhudSettings(): Returning ${currentSettings}`);
-	
+
 	return JSON.stringify(currentSettings);
 
 }
@@ -69,8 +70,27 @@ function setBrightnessLevel(level) {
 
 function getWifiMode() {
 
-	console.log('Stub getWifiMode()');
-	return 'client';
+	console.log('getWifiMode()');
+	var bashCmd = 'grep -rnw /boot/crankshaft/crankshaft_env.sh -e ENABLE_HOTSPOT';
+	var wifiMode = 'Error';
+
+	try {
+		var res = execSync(bashCmd);
+		console.log(`getWifiMode(): res.toString()=${res.toString()}`);
+		let hotspotEnabled = (res.toString().split('='))[1];
+		console.log(`getWifiMode(): hotspotEnabled=${hotspotEnabled}`);
+		console.log(`getWifiMode(): hotspotEnabled==0 : ${hotspotEnabled==0}`);
+		console.log(`getWifiMode(): hotspotEnabled=='0' : ${hotspotEnabled=='0'}`);
+		console.log(`getWifiMode(): hotspotEnabled==1 : ${hotspotEnabled==1}`);
+		console.log(`getWifiMode(): hotspotEnabled=='1' : ${hotspotEnabled=='1'}`);
+		wifiMode = (hotspotEnabled == 1) ? 'hotspot' : 'client';
+		console.log(`getWifiMode(): wifiMode=${wifiMode}`);
+	} catch(err) {
+		console.log('getWifiMode(): err', err);
+		console.log('getWifiMode(): stderr', err.stderr.toString());
+	}
+
+	return wifiMode;
 
 }
 
