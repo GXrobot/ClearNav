@@ -8,14 +8,16 @@ function getEZhudSettings() {
 	// TBD: Actually get settings...
 
 	var currentSettings = {
-		'brightness_mode': 'day',
-		'brightness_level': 60,
-		'wifi_country': 'CA',
-		'wifi_mode': 'hotspot',
-		'wifi_ssid': 'test_wifi_ssid',
-		'wifi_psk': 'test_wifi_psk'
+		'brightness_mode': getBrightnessMode(),
+		'brightness_level': getBrightnessLevel(),
+		'wifi_mode': getWifiMode(),
+		'wifi_country': getWifiCountry(),
+		'wifi_ssid': getWifiSSID(),
+		'wifi_psk': getWifiPSK()
 	};
 
+	console.log(`getEZhudSettings(): Returning ${currentSettings}`);
+	
 	return JSON.stringify(currentSettings);
 
 }
@@ -39,8 +41,85 @@ function setEZhudSettings(newSettings) {
 
 }
 
+function getBrightnessMode() {
+
+	console.log('Stub getBrightnessMode()');
+	return 'day';
+
+}
+
+function setBrightnessMode(mode) {
+
+	console.log('Stub setBrightnessMode()');
+
+}
+
+function getBrightnessLevel() {
+
+	console.log('Stub getBrightnessLevel()');
+	return 60;
+
+}
+
+function setBrightnessLevel(level) {
+
+	console.log('Stub setBrightnessLevel()');
+
+}
+
+function getWifiMode() {
+
+	console.log('Stub getWifiMode()');
+	return 'client';
+
+}
+
+function setWifiMode(mode) {
+
+	console.log('Stub setWifiMode()');
+
+}
+
+function getWifiCountry() {
+
+	console.log('Stub getWifiCountry()');
+	return 'CA';
+
+}
+
+function setWifiCountry(country) {
+
+	console.log('Stub setWifiCountry()');
+
+}
+
+function getWifiSSID() {
+
+	console.log('Stub getWifiSSID()');
+	return 'ClearNav';
+
+}
+
+function setWifiSSID(ssid) {
+
+	console.log('Stub setWifiSSID()');
+
+}
+
+function getWifiPSK() {
+
+	console.log('Stub getWifiPSK()');
+	return 'EZhud'
+
+}
+
+function setWifiPSK(psk) {
+
+	console.log('Stub setWifiPSK()');
+
+}
+
 module.exports = {
 	getEZhudSettings,
 	setEZhudSettings
 }
-
