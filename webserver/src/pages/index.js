@@ -1,6 +1,6 @@
 // Example/debugging code for server backend communication
 
-const debug = true;
+const debug = false;
 
 var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
@@ -69,13 +69,19 @@ let infowindow;
 // initialize the map widget
 // After clicking autocompleted address, show marker on map
 function initMap() {
-
+    console.log("hello");
     var input = document.getElementById('searchTextField');
 
     // production server has map stuff and address autocomplete
     if (!debug) {
         const sfu = new google.maps.LatLng(49.2781, -122.9199);
+
+        var mapOptions = {
+
+        }
         map = new google.maps.Map(document.getElementById('map'), {
+            // map options
+            disableDefaultUI: true,
             center: sfu,
             zoom: 12,
         });
@@ -116,7 +122,7 @@ function initMap() {
 }
 
 function StartNavigation() {
-    const loc = document.getElementById("searchTextField").value;
+    const loc = document.getElementsByClassName("searchBarAndButton")[0].value;
 
     // open google maps app
     var mode = "&mode=d";
