@@ -36,7 +36,7 @@ function getEZhudSettings() {
 function sendEZhudSettings() {
 
 	// Create the key value paris of settings
-	var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
+	var updatedSettings = "brightness_mode=day&brightness_level=100&wifi_mode=client&inv=valid&wifi_country=DE&wifi_ssid=EZhud&wifi_psk=ClearNav";
 
 	// Create the http request object
 	var xhttp = new XMLHttpRequest();

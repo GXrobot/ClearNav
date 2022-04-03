@@ -1,12 +1,13 @@
 const fs = require('fs');
 const {execSync} = require('child_process');
 
+const CS_ENV_FILE = '/boot/crankshaft/crankshaft_env.sh';
+const HOSTAPD_CONF = '/etc/hostapd/hostapd.conf';
+
 // Gets all system settings supported by the mobile application in JSON format
 function getEZhudSettings() {
 
 	console.log('getEZhudSettings() called');
-
-	// TBD: Actually get settings...
 
 	var currentSettings = {
 		'brightness_mode': getBrightnessMode(),
@@ -103,7 +104,7 @@ function setBrightnessLevel(level) {
 function getWifiMode() {
 
 	console.log('	getWifiMode()');
-	var bashCmd = 'grep -rnw /boot/crankshaft/crankshaft_env.sh -e ENABLE_HOTSPOT';
+	var bashCmd = `grep -rnw ${CS_ENV_FILE} -e ENABLE_HOTSPOT`;
 	var wifiMode = 'Error';
 
 	try {
@@ -124,7 +125,51 @@ function getWifiMode() {
 
 function setWifiMode(mode) {
 
-	console.log('	Stub setWifiMode()');
+	console.log('	setWifiMode()');
+
+	if( mode != 'hotspot' && mode != 'client' ) {
+		console.log(`	setWifiMode(): Unexpected wifi mode: ${mode}`);
+		return 1;
+	}
+
+	// Wifi mode can be set through crankshaft_env.sh
+	if( mode == 'hotspot' ) {
+		// TODO: Should the previous client ssid and psk be saved?
+		try {
+			// Set hotspot mode
+			let res = execSync(`sudo sed -i 's/ENABLE_HOTSPOT=./ENABLE_HOTSPOT=1/' ${CS_ENV_FILE}`);
+			// Unset client ssid and psk
+			res = execSync(`sudo sed -i 's/WIFI_SSID=*/WIFI_SSID="sample"/' ${CS_ENV_FILE}`);
+			res = execSync(`sudo sed -i 's/WIFI_PSK=*/WIFI_PSK="sample"/' ${CS_ENV_FILE}`);
+			res = execSync(`sudo sed -i 's/WIFI2_SSID=*/WIFI2_SSID="sample"/' ${CS_ENV_FILE}`);
+			res = execSync(`sudo sed -i 's/WIFI2_PSK=*/WIFI2_PSK="sample"/' ${CS_ENV_FILE}`);
+			// Force recreate wpa_supplicant.conf update
+			res = execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=*/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+			return 0;
+		} catch(err) {
+			console.log('	setWifiMode(): Failed to set hotspot mode');
+			console.log('	setWifiMode(): err', err);
+			console.log('	setWifiMode(): stderr', err.stderr.toString());
+		}
+	} else if( mode == 'client' ) {
+		try {
+			// Disable hotspot
+			let res = execSync(`sudo sed -i 's/ENABLE_HOTSPOT=./ENABLE_HOTSPOT=0/' ${CS_ENV_FILE}`);
+			// At this point we cannot know for sure what the wifi credentials will be
+			// Leave them blank. Also means no point in forcing a wpa_supplicant.conf refresh
+			// res = execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=*/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+			return 0;
+		} catch(err) {
+			console.log('	setWifiMode(): Failed to set client mode');
+			console.log('	setWifiMode(): err', err);
+			console.log('	setWifiMode(): stderr', err.stderr.toString());
+		}
+	} else {
+		console.log(`	setWifiMode(): Unexpected wifi mode: ${mode}`);
+		return 1;
+	}
+
+	return 1;
 
 }
 
@@ -143,8 +188,30 @@ function setWifiCountry(country) {
 
 function getWifiSSID() {
 
-	console.log('	Stub getWifiSSID()');
-	return 'ClearNav';
+	console.log('	getWifiSSID()');
+	var bashCmd = '';
+	var wifiSSID = 'Error';
+
+	if( getWifiMode() == 'hotspot' ) {
+		bashCmd = `grep -rnw ${HOSTAPD_CONF} -e ssid`;
+	} else {
+		bashCmd = `grep -rnw ${CS_ENV_FILE} -e WIFI_SSID`;
+	}
+
+	console.log(`	getWifiSSID(): bashCmd=${bashCmd}`);
+
+	try {
+
+		let res = execSync(bashCmd);
+		console.log(`	getWifiSSID(): res.toString()=${res.toString()}`);
+		wifiSSID = res.toString().replace(/["\n]+/g, '').split('=')[1];
+		console.log(`	getWifiSSID(): wifiSSID=${wifiSSID}`);
+
+	} catch(err) {
+
+	}
+
+	return wifiSSID;
 
 }
 
