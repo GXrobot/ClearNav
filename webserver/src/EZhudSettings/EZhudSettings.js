@@ -17,7 +17,7 @@ function getEZhudSettings() {
 		'wifi_psk': getWifiPSK()
 	};
 
-	console.log(`getEZhudSettings(): Returning ${currentSettings}`);
+	console.log(`getEZhudSettings(): Returning ${JSON.stringify(currentSettings)}`);
 
 	return JSON.stringify(currentSettings);
 
@@ -28,14 +28,46 @@ function getEZhudSettings() {
 function setEZhudSettings(newSettings) {
 
 	console.log('setEZhudSettings() called');
-
-	console.log('Received the following settings:');
+	var rebootNeeded = false;
 
 	// Iterate through each setting given
 	// For loop because we only expect entries for settings that have changed
 	for( const [key, value] of Object.entries(newSettings) ) {
-		// TBD: Actually apply the settings...
-		console.log(`	${key}: ${value}`);
+
+		// TODO: Put the functions into a dictionary to get rid of this switch case
+		switch(key) {
+			case 'brightness_mode':
+				console.log('setEZhudSettings(): brightness_mode');
+				setBrightnessLevel(value);
+				break;
+			case 'brightness_level':
+				console.log('setEZhudSettings(): brightness_level');
+				setBrightnessLevel(value);
+				break;
+			case 'wifi_mode':
+				console.log('setEZhudSettings(): wifi_mode');
+				setWifiMode(value);
+				rebootNeeded = true;
+				break;
+			case 'wifi_country':
+				console.log('setEZhudSettings(): wifi_country');
+				setWifiCountry(value);
+				rebootNeede = true;
+				break;
+			case 'wifi_ssid':
+				console.log('setEZhudSettings(): wifi_ssid');
+				setWifiSSID(value);
+				rebootNeeded = true;
+				break;
+			case 'wifi_psk':
+				console.log('setEZhudSettings(): wifi_psk');
+				setWifiPSK(value);
+				rebootNeeded = true;
+				break;
+			default:
+				console.log(`setEZhudSettings(): Unexpected key pair [${key}, ${value}]`);
+		}
+
 	}
 
 	return getEZhudSettings();
@@ -44,50 +76,46 @@ function setEZhudSettings(newSettings) {
 
 function getBrightnessMode() {
 
-	console.log('Stub getBrightnessMode()');
+	console.log('	Stub getBrightnessMode()');
 	return 'day';
 
 }
 
 function setBrightnessMode(mode) {
 
-	console.log('Stub setBrightnessMode()');
+	console.log('	Stub setBrightnessMode()');
 
 }
 
 function getBrightnessLevel() {
 
-	console.log('Stub getBrightnessLevel()');
+	console.log('	Stub getBrightnessLevel()');
 	return 60;
 
 }
 
 function setBrightnessLevel(level) {
 
-	console.log('Stub setBrightnessLevel()');
+	console.log('	Stub setBrightnessLevel()');
 
 }
 
 function getWifiMode() {
 
-	console.log('getWifiMode()');
+	console.log('	getWifiMode()');
 	var bashCmd = 'grep -rnw /boot/crankshaft/crankshaft_env.sh -e ENABLE_HOTSPOT';
 	var wifiMode = 'Error';
 
 	try {
 		var res = execSync(bashCmd);
-		console.log(`getWifiMode(): res.toString()=${res.toString()}`);
+		console.log(`	getWifiMode(): res.toString()=${res.toString()}`);
 		let hotspotEnabled = (res.toString().split('='))[1];
-		console.log(`getWifiMode(): hotspotEnabled=${hotspotEnabled}`);
-		console.log(`getWifiMode(): hotspotEnabled==0 : ${hotspotEnabled==0}`);
-		console.log(`getWifiMode(): hotspotEnabled=='0' : ${hotspotEnabled=='0'}`);
-		console.log(`getWifiMode(): hotspotEnabled==1 : ${hotspotEnabled==1}`);
-		console.log(`getWifiMode(): hotspotEnabled=='1' : ${hotspotEnabled=='1'}`);
+		console.log(`	getWifiMode(): hotspotEnabled=${hotspotEnabled}`);
 		wifiMode = (hotspotEnabled == 1) ? 'hotspot' : 'client';
-		console.log(`getWifiMode(): wifiMode=${wifiMode}`);
+		console.log(`	getWifiMode(): wifiMode=${wifiMode}`);
 	} catch(err) {
-		console.log('getWifiMode(): err', err);
-		console.log('getWifiMode(): stderr', err.stderr.toString());
+		console.log('	getWifiMode(): err', err);
+		console.log('	getWifiMode(): stderr', err.stderr.toString());
 	}
 
 	return wifiMode;
@@ -96,46 +124,46 @@ function getWifiMode() {
 
 function setWifiMode(mode) {
 
-	console.log('Stub setWifiMode()');
+	console.log('	Stub setWifiMode()');
 
 }
 
 function getWifiCountry() {
 
-	console.log('Stub getWifiCountry()');
+	console.log('	Stub getWifiCountry()');
 	return 'CA';
 
 }
 
 function setWifiCountry(country) {
 
-	console.log('Stub setWifiCountry()');
+	console.log('	Stub setWifiCountry()');
 
 }
 
 function getWifiSSID() {
 
-	console.log('Stub getWifiSSID()');
+	console.log('	Stub getWifiSSID()');
 	return 'ClearNav';
 
 }
 
 function setWifiSSID(ssid) {
 
-	console.log('Stub setWifiSSID()');
+	console.log('	Stub setWifiSSID()');
 
 }
 
 function getWifiPSK() {
 
-	console.log('Stub getWifiPSK()');
+	console.log('	Stub getWifiPSK()');
 	return 'EZhud'
 
 }
 
 function setWifiPSK(psk) {
 
-	console.log('Stub setWifiPSK()');
+	console.log('	Stub setWifiPSK()');
 
 }
 
