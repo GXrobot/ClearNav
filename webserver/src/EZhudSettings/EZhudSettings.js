@@ -39,7 +39,7 @@ function setEZhudSettings(newSettings) {
 		switch(key) {
 			case 'brightness_mode':
 				console.log('setEZhudSettings(): brightness_mode');
-				setBrightnessLevel(value);
+				setBrightnessMode(value);
 				break;
 			case 'brightness_level':
 				console.log('setEZhudSettings(): brightness_level');
@@ -84,7 +84,24 @@ function getBrightnessMode() {
 
 function setBrightnessMode(mode) {
 
-	console.log('	Stub setBrightnessMode()');
+	console.log('	setBrightnessMode()');
+
+	// Check we got a valid mode
+	if( mode != 'day' && mode != 'night' ) {
+		console.log(`	setBrightnessMode(): Unexected mode: ${mode}`);
+		return 1;
+	}
+
+	try {
+		console.log(`	setBightnessMode(): Setting brightness mode to ${mode}`);
+		let res = execSync(`csmt state ${mode}`);
+		return 0;
+	} catch(err) {
+		console.log('	setBrightnessMode(): err', err);
+		console.log('	setBrightnessMode(): stderr', err.stderr.toString());
+	}
+
+	return 1;
 
 }
 
@@ -175,8 +192,29 @@ function setWifiMode(mode) {
 
 function getWifiCountry() {
 
-	console.log('	Stub getWifiCountry()');
-	return 'CA';
+	console.log('	getWifiCountry()');
+	var bashCmd = '';
+	var wifiCountry = 'Error';
+
+	if( getWifiMode() == 'hotspot' ) {
+		bashCmd = `grep -rnw ${HOSTAPD_CONF} -e country_code`;
+	} else {
+		bashCmd = `grep -rnw ${CS_ENV_FILE} -e WIFI_COUNTRY`;
+	}
+
+	console.log(`	getWifiCountry(): bashCmd=${bashCmd}`);
+
+	try {
+		let res = execSync(bashCmd);
+		console.log(`	getWifiCountry(): res.toString()=${res.toString()}`);
+		wifiCountry = res.toString().replace(/["\n]+/g, '').split('=')[1];
+		console.log(`	getWifiCountry(): wifiCountry=${wifiCountry}`);
+	} catch(err) {
+		console.log('	getWifiCountry(): err', err);
+		console.log('	getWifiCountry(): stderr', err.stderr.toString());
+	}
+
+	return wifiCountry;
 
 }
 
