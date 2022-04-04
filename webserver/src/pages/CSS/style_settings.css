@@ -32,6 +32,9 @@ h1 {
     overflow-x: auto;
 }
 
+.nav_text {
+    font-size: 16px;
+}
 .nav_link {
     display: flex;
     align-items: center;

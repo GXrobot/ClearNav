@@ -32,8 +32,10 @@ body {
 }
 
 #searchTextField {
+    background: url("../../assets/search_icon.png") left no-repeat;
+    padding-left: 25px;
     height: 35px;
-    width: 70%;
+    width: 65%;
     font-size: 16px;
     border-radius: 15px;
     background-color: #f0f2f5;
@@ -57,6 +59,10 @@ body {
     display: flex;
     background-color: #f0f2f5;
     overflow-x: auto;
+}
+
+.nav_text {
+    font-size: 16px;
 }
 
 .nav_link {
