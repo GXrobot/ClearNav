@@ -122,7 +122,7 @@ function initMap() {
 }
 
 function StartNavigation() {
-    const loc = document.getElementsByClassName("searchBarAndButton")[0].value;
+    const loc = document.getElementById("searchBarAndButton").querySelector("#searchTextField").value;
 
     // open google maps app
     var mode = "&mode=d";

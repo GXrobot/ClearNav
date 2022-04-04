@@ -24,7 +24,7 @@ body {
 /*     left: 0; */
 /* } */
 
-.searchBarAndButton {
+#searchBarAndButton {
     margin: auto;
     width: 95%;
     /* border: 3px solid green; */
