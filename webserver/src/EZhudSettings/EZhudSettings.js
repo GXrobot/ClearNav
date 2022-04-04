@@ -133,7 +133,7 @@ function setBrightnessLevel(level) {
 function getWifiMode() {
 
 	console.log('	getWifiMode()');
-	var bashCmd = `grep -rnw ${CS_ENV_FILE} -e ENABLE_HOTSPOT`;
+	var bashCmd = `grep ${CS_ENV_FILE} -e ENABLE_HOTSPOT`;
 	var wifiMode = 'Error';
 
 	try {
@@ -166,14 +166,14 @@ function setWifiMode(mode) {
 		// TODO: Should the previous client ssid and psk be saved?
 		try {
 			// Set hotspot mode
-			let res = execSync(`sudo sed -i 's/ENABLE_HOTSPOT=./ENABLE_HOTSPOT=1/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/ENABLE_HOTSPOT=0/ENABLE_HOTSPOT=1/' ${CS_ENV_FILE}`);
 			// Unset client ssid and psk
-			res = execSync(`sudo sed -i 's/WIFI_SSID=*/WIFI_SSID="sample"/' ${CS_ENV_FILE}`);
-			res = execSync(`sudo sed -i 's/WIFI_PSK=*/WIFI_PSK="sample"/' ${CS_ENV_FILE}`);
-			res = execSync(`sudo sed -i 's/WIFI2_SSID=*/WIFI2_SSID="sample"/' ${CS_ENV_FILE}`);
-			res = execSync(`sudo sed -i 's/WIFI2_PSK=*/WIFI2_PSK="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_PSK=*./WIFI_PSK="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI2_SSID=.*/WIFI2_SSID="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI2_PSK=.*/WIFI2_PSK="sample"/' ${CS_ENV_FILE}`);
 			// Force recreate wpa_supplicant.conf update
-			res = execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=*/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
 			return 0;
 		} catch(err) {
 			console.log('	setWifiMode(): Failed to set hotspot mode');
@@ -183,7 +183,7 @@ function setWifiMode(mode) {
 	} else if( mode == 'client' ) {
 		try {
 			// Disable hotspot
-			let res = execSync(`sudo sed -i 's/ENABLE_HOTSPOT=./ENABLE_HOTSPOT=0/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/ENABLE_HOTSPOT=1/ENABLE_HOTSPOT=0/' ${CS_ENV_FILE}`);
 			// At this point we cannot know for sure what the wifi credentials will be
 			// Leave them blank. Also means no point in forcing a wpa_supplicant.conf refresh
 			// res = execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=*/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
@@ -209,9 +209,9 @@ function getWifiCountry() {
 	var wifiCountry = 'Error';
 
 	if( getWifiMode() == 'hotspot' ) {
-		bashCmd = `grep -rnw ${HOSTAPD_CONF} -e country_code`;
+		bashCmd = `grep ${HOSTAPD_CONF} -e country_code`;
 	} else {
-		bashCmd = `grep -rnw ${CS_ENV_FILE} -e WIFI_COUNTRY`;
+		bashCmd = `grep ${CS_ENV_FILE} -e WIFI_COUNTRY`;
 	}
 
 	console.log(`	getWifiCountry(): bashCmd=${bashCmd}`);
@@ -251,7 +251,7 @@ function setWifiCountry(country) {
 	console.log(`	setWifiCountry(): bashCmd=${bashCmd}`);
 
 	try {
-		let res = execSync(bashCmd);
+		execSync(bashCmd);
 		return 0;
 	} catch(err) {
 		console.log('	setWifiCountry(): err', err);
@@ -269,9 +269,9 @@ function getWifiSSID() {
 	var wifiSSID = 'Error';
 
 	if( getWifiMode() == 'hotspot' ) {
-		bashCmd = `grep -rnw ${HOSTAPD_CONF} -e ssid`;
+		bashCmd = `grep ${HOSTAPD_CONF} -e ssid`;
 	} else {
-		bashCmd = `grep -rnw ${CS_ENV_FILE} -e WIFI_SSID`;
+		bashCmd = `grep ${CS_ENV_FILE} -e WIFI_SSID`;
 	}
 
 	console.log(`	getWifiSSID(): bashCmd=${bashCmd}`);
@@ -293,20 +293,92 @@ function getWifiSSID() {
 
 function setWifiSSID(ssid) {
 
-	console.log('	Stub setWifiSSID()');
+	console.log('	setWifiSSID()');
+
+	// https://stackoverflow.com/questions/4919889/is-there-a-standard-that-defines-what-is-a-valid-ssid-and-password
+	// Any 0 to 32 length 'string' is allowed (technically octets but I don't think we can get non-ASCII characters from a POST query)
+	if( ssid.length > 32 ) {
+		console.log(`	setWifiSSID(): Invalid length SSID: ${ssid}:${ssid.length}`);
+		return 1;
+	}
+
+	var bashCmd = '';
+
+	if( getWifiMode() == 'hotspot' ) {
+		bashCmd = `sudo sed -i 's/ssid=.*/ssid=${ssid}/' ${HOSTAPD_CONF}`;
+	} else {
+		bashCmd = `sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID=${ssid}/' ${CS_ENV_FILE}`;
+	}
+
+	console.log(`	setWifiSSID(): bashCmd={$bashCmd}`);
+
+	try {
+		execSync(bashCmd);
+		return 0;
+	} catch(err) {
+		console.log('	setWifiSSID(): err', err);
+		console.log('	setWifiSSID(): stderr', err.stderr.toString());
+	}
+
+	return 1;
 
 }
 
 function getWifiPSK() {
 
-	console.log('	Stub getWifiPSK()');
-	return 'EZhud'
+	console.log('	getWifiPSK()');
+	var bashCmd = '';
+	var wifiPSK = 'Error';
+
+	if( getWifiMode() == 'hotspot' ) {
+		bashCmd = `grep ${HOSTAPD_CONF} -e wpa_passphrase`; 	
+	} else {
+		bashCmd = `grep ${CS_ENV_FILE} -e WIFI_PSK`;
+	}
+
+	console.log(`	getWifiPSK(): bashCmd=${bashCmd}`);
+
+	try {
+		let res = execSync(bashCmd);
+		console.log(`	getWifiPSK(): res.toString()=${res.toString()}`);
+		wifiPSK = res.toString().replace(/["\n]+/g, '').split('=')[1];
+		console.log(`	getWifiPSK(): wifiPSK=${wifiPSK}`);
+	} catch(err) {
+		console.log('	getWifiPSK(): err', err);
+		console.log('	getWifiPSK(): stderr', err.stderr.toString());
+	}
+
+	return wifiPSK;
 
 }
 
 function setWifiPSK(psk) {
 
-	console.log('	Stub setWifiPSK()');
+	console.log('	setWifiPSK()');
+
+	// Password validation?
+	// https://w1.fi/cgit/hostap/plain/hostapd/hostapd.conf
+	
+	var bashCmd = '';
+
+	if( getWifiMode() == 'hotspot' ) {
+		bashCmd = `sudo sed -i 's/wpa_passphrase=.*/wpa_passphrase=${psk}/' ${HOSTAPD_CONF}`;
+	} else {
+
+		bashCmd = `sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK=${psk}/' ${CS_ENV_FILE}`;
+	}
+
+	console.log(`	setWifiPSK(): bashCmd=${bashCmd}`);
+
+	try {
+		execSync(bashCmd);
+		return 0;
+	} catch(err) {
+		console.log('	setWifiPSK(): err', err);
+		console.log('	setWifiPSK(): stderr', err.stderr.toString());
+	}
+
+	return 1;
 
 }
 

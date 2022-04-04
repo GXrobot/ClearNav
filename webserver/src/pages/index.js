@@ -33,10 +33,7 @@ function getEZhudSettings() {
 
 // This function sends updated settings to the server
 // Expects the settings and their values to be returned as a JSON
-function sendEZhudSettings() {
-
-	// Create the key value paris of settings
-	var updatedSettings = "brightness_mode=day&brightness_level=100&wifi_mode=client&inv=valid&wifi_country=DE&wifi_ssid=EZhud&wifi_psk=ClearNav";
+function sendEZhudSettings(updatedSettings) {
 
 	// Create the http request object
 	var xhttp = new XMLHttpRequest();
