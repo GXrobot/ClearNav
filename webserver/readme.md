@@ -3,7 +3,7 @@ To use the web server:
 ```
 sudo apt install curl
 curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
-sudo apt install nodejs
+sudo apt install nodejs -y
 ```
 - Clone the repo: `git clone git@github.com:GXrobot/ClearNav.git`
 - Enter the web server directory: `cd ClearNav/webserver`
