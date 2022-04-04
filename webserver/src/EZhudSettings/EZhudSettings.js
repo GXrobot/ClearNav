@@ -4,6 +4,9 @@ const {execSync} = require('child_process');
 const CS_ENV_FILE = '/boot/crankshaft/crankshaft_env.sh';
 const HOSTAPD_CONF = '/etc/hostapd/hostapd.conf';
 
+// System always boots in day mode
+var brightnessMode = 'day';
+
 // Gets all system settings supported by the mobile application in JSON format
 function getEZhudSettings() {
 
@@ -28,7 +31,7 @@ function getEZhudSettings() {
 // Expects the req.body from the POST request to be passed in unmodified
 function setEZhudSettings(newSettings) {
 
-	console.log('setEZhudSettings() called');
+	console.log('setEZhudSettings()');
 	var rebootNeeded = false;
 
 	// Iterate through each setting given
@@ -71,14 +74,22 @@ function setEZhudSettings(newSettings) {
 
 	}
 
+	try {
+		execSync('sync');
+	} catch(err) {
+		console.log('setEZhudSettings(): Failed to flush changes to disk');
+		console.log('setEZhudSettings(): err', err);
+		console.log('setEZhudSettings(): stderr', err.stderr.toString());
+	}
+
 	return getEZhudSettings();
 
 }
 
 function getBrightnessMode() {
 
-	console.log('	Stub getBrightnessMode()');
-	return 'day';
+	console.log('	getBrightnessMode()');
+	return brightnessMode;
 
 }
 
@@ -95,6 +106,7 @@ function setBrightnessMode(mode) {
 	try {
 		console.log(`	setBightnessMode(): Setting brightness mode to ${mode}`);
 		let res = execSync(`csmt state ${mode}`);
+		brightnessMode = mode;
 		return 0;
 	} catch(err) {
 		console.log('	setBrightnessMode(): err', err);
@@ -220,7 +232,33 @@ function getWifiCountry() {
 
 function setWifiCountry(country) {
 
-	console.log('	Stub setWifiCountry()');
+	console.log('	setWifiCountry()');
+
+	// Could replace this with a comparison against a list since the accepted codes are known
+	if( !(country.match(/^[A-Z][A_Z]$/)) ) {
+		console.log(`	setWifiCountry(): Unexpected country: ${country}`);
+		return 1;
+	}
+
+	var bashCmd = '';
+
+	if( getWifiMode() == 'hotspot' ) {
+		bashCmd = `sudo sed -i 's/country_code=[A-Z][A-Z]/country_code=${country}/' ${HOSTAPD_CONF}`;
+	} else {
+		bashCmd = `sudo sed -i 's/WIFI_COUNTRY=[A-Z][A-Z]/WIFI_COUNTRY=${country}/' ${CS_ENV_FILE}`;
+	}
+
+	console.log(`	setWifiCountry(): bashCmd=${bashCmd}`);
+
+	try {
+		let res = execSync(bashCmd);
+		return 0;
+	} catch(err) {
+		console.log('	setWifiCountry(): err', err);
+		console.log('	setWifiCountry(): stderr', err.stderr.toString());
+	}
+
+	return 1;
 
 }
 
