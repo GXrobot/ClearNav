@@ -33,10 +33,7 @@ function getEZhudSettings() {
 
 // This function sends updated settings to the server
 // Expects the settings and their values to be returned as a JSON
-function sendEZhudSettings() {
-
-	// Create the key value paris of settings
-	var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
+function sendEZhudSettings(updatedSettings) {
 
 	// Create the http request object
 	var xhttp = new XMLHttpRequest();

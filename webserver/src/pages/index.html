@@ -19,10 +19,16 @@
 				<input type="submit" name="getUpdate" value="Get Update" />
 			</fieldset>
 		</form>
-		<form class="pushUpdate" method="get" onsubmit="sendEZhudSettings();return false">
+		<form class="pushClientUpdate" method="get" onsubmit="sendEZhudSettings('brightness_mode=day&brightness_level=100&wifi_mode=client&inv=valid&wifi_country=CA&wifi_ssid=test%20wifi%20ssid&wifi_psk=test%20wifi%password');return false">
 			<fieldset>
-				<legend>Push Update</legend>
-				<input type="submit" name="pushUpdate" value="Push Update" />
+				<legend>Set Client</legend>
+				<input type="submit" name="pushClientUpdate" value="Set Client" />
+			</fieldset>
+		</form>
+		<form class="pushHotspotUpdate" method="get" onsubmit="sendEZhudSettings('brightness_mode=night&brightness_level=10&wifi_mode=hotspot&inv=valid&wifi_country=US&wifi_ssid=EZhud&wifi_psk=ClearNav');return false">
+			<fieldset>
+				<legend>Set Hotspot</legend>
+				<input type="submit"  name="pushHotspotUpdate" value="Set Hotspot" />
 			</fieldset>
 		</form>
     </body>
