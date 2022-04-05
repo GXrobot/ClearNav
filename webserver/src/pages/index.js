@@ -1,7 +1,8 @@
 // Example/debugging code for server backend communication
 
-var baseUrl = "http://10.0.0.18:8080";
+const debug = true;
 
+var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
 // This function queries the server for updated settings
@@ -23,9 +24,7 @@ function getEZhudSettings() {
 			retData = JSON.parse(this.responseText);
 			// Do something useful with the data...
 			console.log(retData);
-		}
-	};
-
+		} };
 	// Send the request
 	console.log("Sending GET update");
 	xhttp.send();
@@ -33,7 +32,30 @@ function getEZhudSettings() {
 
 // This function sends updated settings to the server
 // Expects the settings and their values to be returned as a JSON
-function sendEZhudSettings(updatedSettings) {
+function sendEZhudSettings() {
+    // var country_select = document.getElementById('country-names');
+    var country = document.querySelector(`[id=country-names]`);
+    var wifi_mode = document.querySelector(`[id=mode-names]`);
+    var brightness_mode = document.querySelector(`[id=bright-names]`);
+    var brightness_level = document.getElementById('range');
+    var wifi_ssid = document.getElementById('wifi-ssid');
+    var wifi_psk = document.getElementById('wifi-psk');
+
+    // incomplete settings by user
+    if (country.value === "Choose..." || wifi_mode.value === "Choose..." || brightness_mode.value === "Choose..." ||
+        wifi_ssid.value === "" || wifi_psk.value === "") {
+        alert("Incomplete Settings. Please try again");
+        return;
+    }
+
+	// Create the key value pairs of settings
+	// var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
+	var updatedSettings = "wifi_mode=" + wifi_mode.value + 
+                          "&country=" + country.value + 
+                          "&brightness_mode=" + brightness_mode.value + 
+                          "&brightness_level=" + brightness_level.value + 
+                          "&wifi_ssid=" + wifi_ssid.value + 
+                          "&wifi_psk=" + wifi_psk.value;
 
 	// Create the http request object
 	var xhttp = new XMLHttpRequest();
@@ -59,24 +81,75 @@ function sendEZhudSettings(updatedSettings) {
 	xhttp.send(updatedSettings)
 }
 
-// executed when the "Start" button on the navigation page is pressed
+// variables for initMap()
+let map;
+let service;
+let infowindow;
+
+// initialize the map widget
+// After clicking autocompleted address, show marker on map
+function initMap() {
+    console.log("hello");
+    var input = document.getElementById('searchTextField');
+
+    // production server has map stuff and address autocomplete
+    if (!debug) {
+        const sfu = new google.maps.LatLng(49.2781, -122.9199);
+
+        var mapOptions = {
+
+        }
+        map = new google.maps.Map(document.getElementById('map'), {
+            // map options
+            disableDefaultUI: true,
+            center: sfu,
+            zoom: 12,
+        });
+
+        // infowindow on marker
+        const infowindow = new google.maps.InfoWindow();
+        const infowindowContent = document.getElementById("infowindow-content");
+        infowindow.setContent(infowindowContent);
+
+        // autocomplete instance in search bar
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.setComponentRestrictions({
+            country: ["ca"],
+        });
+
+        // marker instance 
+        const marker = new google.maps.Marker({
+            map,
+            anchorPoint: new google.maps.Point(0, -29),
+        });
+
+        // listener for when we click on autocompleted address
+        autocomplete.addListener("place_changed", () => {
+            infowindow.close();
+            marker.setVisible(false);
+
+            // pull up the new marker
+            const place = autocomplete.getPlace();
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+            infowindowContent.children["place-name"].textContent = place.name;
+            infowindowContent.children["place-address"].textContent = place.formatted_address;
+            infowindow.open(map, marker);
+            var log = "Autocompleted address: " + place.formatted_address;
+            console.log("log: ", log);
+        });
+    }
+}
+
 function StartNavigation() {
-    const loc = document.getElementById("nav_search_bar").value;
+    const loc = document.getElementById("searchBarAndButton").querySelector("#searchTextField").value;
 
     // open google maps app
-    // form query formatted string
-    // var address = 8888;
-    // var street = " University Dr";
-    // var city = " Burnaby";
-    // var prov = " BC";
     var mode = "&mode=d";
-
 
     // form "turn-by-turn navigation" intent
     // q: sets the end point for the navigation search (the address)
     // mode: sets the method of transportation
-    // var destination = "google.navigation:q=" + address + street + city + prov + mode;
-
     var destination = "google.navigation:q=" + loc + mode;
 	console.log("starting navigation to", loc);
 
