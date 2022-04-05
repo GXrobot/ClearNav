@@ -1,5 +1,5 @@
 const fs = require('fs');
-const {execSync} = require('child_process');
+const {exec, execSync} = require('child_process');
 
 const CS_ENV_FILE = '/boot/crankshaft/crankshaft_env.sh';
 const HOSTAPD_CONF = '/etc/hostapd/hostapd.conf';
@@ -82,6 +82,12 @@ function setEZhudSettings(newSettings) {
 		console.log('setEZhudSettings(): stderr', err.stderr.toString());
 	}
 
+	// Trigger a system reboot when we change wifi settings
+	if( rebootNeeded ) {
+		// Call the reboot via an async call to allow time for the server to return the updated settings to the client
+		exec('sleep 5; sudo reboot');
+	}
+	
 	return getEZhudSettings();
 
 }
