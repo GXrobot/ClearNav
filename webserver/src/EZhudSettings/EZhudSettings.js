@@ -169,7 +169,7 @@ function setWifiMode(mode) {
 			execSync(`sudo sed -i 's/ENABLE_HOTSPOT=0/ENABLE_HOTSPOT=1/' ${CS_ENV_FILE}`);
 			// Unset client ssid and psk
 			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID="sample"/' ${CS_ENV_FILE}`);
-			execSync(`sudo sed -i 's/WIFI_PSK=*./WIFI_PSK="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK="sample"/' ${CS_ENV_FILE}`);
 			execSync(`sudo sed -i 's/WIFI2_SSID=.*/WIFI2_SSID="sample"/' ${CS_ENV_FILE}`);
 			execSync(`sudo sed -i 's/WIFI2_PSK=.*/WIFI2_PSK="sample"/' ${CS_ENV_FILE}`);
 			// Force recreate wpa_supplicant.conf update
