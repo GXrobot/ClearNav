@@ -5,7 +5,7 @@ const chargingBar = document.querySelector(".charging_bar");
 const dischargingTime = document.querySelector(".discharging_time");
 const otherInfo = document.querySelector(".other_info");
 
-const bat_level = 0.01;
+const bat_level = 0.75;
 const bat_isCharging = false;
 const bat_dischargingTime = 600;
 

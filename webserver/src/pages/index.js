@@ -33,9 +33,29 @@ function getEZhudSettings() {
 // This function sends updated settings to the server
 // Expects the settings and their values to be returned as a JSON
 function sendEZhudSettings() {
+    // var country_select = document.getElementById('country-names');
+    var country = document.querySelector(`[id=country-names]`);
+    var wifi_mode = document.querySelector(`[id=mode-names]`);
+    var brightness_mode = document.querySelector(`[id=bright-names]`);
+    var brightness_level = document.getElementById('range');
+    var wifi_ssid = document.getElementById('wifi-ssid');
+    var wifi_psk = document.getElementById('wifi-psk');
 
-	// Create the key value paris of settings
-	var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
+    // incomplete settings by user
+    if (country.value === "Choose..." || wifi_mode.value === "Choose..." || brightness_mode.value === "Choose..." ||
+        wifi_ssid.value === "" || wifi_psk.value === "") {
+        alert("Incomplete Settings. Please try again");
+        return;
+    }
+
+	// Create the key value pairs of settings
+	// var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
+	var updatedSettings = "wifi_mode=" + wifi_mode.value + 
+                          "&country=" + country.value + 
+                          "&brightness_mode=" + brightness_mode.value + 
+                          "&brightness_level=" + brightness_level.value + 
+                          "&wifi_ssid=" + wifi_ssid.value + 
+                          "&wifi_psk=" + wifi_psk.value;
 
 	// Create the http request object
 	var xhttp = new XMLHttpRequest();
