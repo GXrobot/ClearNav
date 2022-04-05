@@ -1,6 +1,6 @@
 // Example/debugging code for server backend communication
 
-const debug = true;
+const debug = false;
 
 var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
@@ -51,7 +51,7 @@ function sendEZhudSettings() {
 	// Create the key value pairs of settings
 	// var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
 	var updatedSettings = "wifi_mode=" + wifi_mode.value + 
-                          "&country=" + country.value + 
+                          "&wifi_country=" + country.value + 
                           "&brightness_mode=" + brightness_mode.value + 
                           "&brightness_level=" + brightness_level.value + 
                           "&wifi_ssid=" + wifi_ssid.value + 
