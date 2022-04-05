@@ -243,22 +243,29 @@ function setWifiCountry(country) {
 	var bashCmd = '';
 
 	if( getWifiMode() == 'hotspot' ) {
-		bashCmd = `sudo sed -i 's/country_code=[A-Z][A-Z]/country_code=${country}/' ${HOSTAPD_CONF}`;
+		console.log(`	setWifiCountry(): Setting hotspot country to ${country}`);
+		try {
+			execSync(`sudo sed -i 's/country_code=[A-Z][A-Z]/country_code=${country}/' ${HOSTAPD_CONF}`);
+		} catch(err) {
+			console.log('	setWifiCountry(): Failed to set hotspot country');
+			console.log('	setWifiCountry(): err', err);
+			console.log('	setWifiCountry(): stderr', err.stderr.toString());
+			return 1;
+		}
 	} else {
-		bashCmd = `sudo sed -i 's/WIFI_COUNTRY=[A-Z][A-Z]/WIFI_COUNTRY=${country}/' ${CS_ENV_FILE}`;
+		console.log(`	setWifiCountry(): Setting client country to ${country}`);
+		try {
+			execSync(`sudo sed -i 's/WIFI_COUNTRY=[A-Z][A-Z]/WIFI_COUNTRY=${country}/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+		} catch(err) {
+			console.log('	setWifiCountry(): Failed to set client country');
+			console.log('	setWifiCountry(): err', err);
+			console.log('	setWifiCountry(): stderr', err.stderr.toString());
+			return 1;
+		}
 	}
 
-	console.log(`	setWifiCountry(): bashCmd=${bashCmd}`);
-
-	try {
-		execSync(bashCmd);
-		return 0;
-	} catch(err) {
-		console.log('	setWifiCountry(): err', err);
-		console.log('	setWifiCountry(): stderr', err.stderr.toString());
-	}
-
-	return 1;
+	return 0;
 
 }
 
@@ -305,22 +312,29 @@ function setWifiSSID(ssid) {
 	var bashCmd = '';
 
 	if( getWifiMode() == 'hotspot' ) {
-		bashCmd = `sudo sed -i 's/ssid=.*/ssid=${ssid}/' ${HOSTAPD_CONF}`;
+		console.log(`	setWifiSSID(): Setting hotspot Wifi SSID to ${ssid}`);			
+		try {
+			execSync(`sudo sed -i 's/ssid=.*/ssid=${ssid}/' ${HOSTAPD_CONF}`);
+		} catch(err) {
+			console.log('	setWifiSSID(): Failed to set hotspot country');
+			console.log('	setWifiSSID(): err', err);
+			console.log('	setWifiSSID(): stderr', err.stderr.toString());
+			return 1;
+		}
 	} else {
-		bashCmd = `sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID=${ssid}/' ${CS_ENV_FILE}`;
+		console.log(`	setWifiSSID(): Setting client Wifi SSID to ${ssid}`);			
+		try {
+			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID=${ssid}/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+		} catch(err) {
+			console.log('	setWifiSSID(): Failed to set client country');
+			console.log('	setWifiSSID(): err', err);
+			console.log('	setWifiSSID(): stderr', err.stderr.toString());
+			return 1;
+		}
 	}
 
-	console.log(`	setWifiSSID(): bashCmd={$bashCmd}`);
-
-	try {
-		execSync(bashCmd);
-		return 0;
-	} catch(err) {
-		console.log('	setWifiSSID(): err', err);
-		console.log('	setWifiSSID(): stderr', err.stderr.toString());
-	}
-
-	return 1;
+	return 0;
 
 }
 
@@ -362,23 +376,29 @@ function setWifiPSK(psk) {
 	var bashCmd = '';
 
 	if( getWifiMode() == 'hotspot' ) {
-		bashCmd = `sudo sed -i 's/wpa_passphrase=.*/wpa_passphrase=${psk}/' ${HOSTAPD_CONF}`;
+		console.log(`	setWifiPSK(): Setting hotspot PSK to ${psk}`);
+		try {
+			execSync(`sudo sed -i 's/wpa_passphrase=.*/wpa_passphrase=${psk}/' ${HOSTAPD_CONF}`);
+		} catch(err) {
+			console.log(`	setWifiPSK(): Failed to set hotspot PSK`);
+			console.log('	setWifiPSK(): err', err);
+			console.log('	setWifiPSK(): stderr', err.stderr.toString());
+			return 1;
+		}
 	} else {
-
-		bashCmd = `sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK=${psk}/' ${CS_ENV_FILE}`;
+		console.log(`	setWifiPSK(): Setting client PSK to ${psk}`);
+		try {
+			execSync(`sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK=${psk}/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+		} catch(err) {
+			console.log(`	setWifiPSK(): Failed to set client PSK`);
+			console.log('	setWifiPSK(): err', err);
+			console.log('	setWifiPSK(): stderr', err.stderr.toString());
+			return 1;
+		}
 	}
 
-	console.log(`	setWifiPSK(): bashCmd=${bashCmd}`);
-
-	try {
-		execSync(bashCmd);
-		return 0;
-	} catch(err) {
-		console.log('	setWifiPSK(): err', err);
-		console.log('	setWifiPSK(): stderr', err.stderr.toString());
-	}
-
-	return 1;
+	return 0;
 
 }
 
