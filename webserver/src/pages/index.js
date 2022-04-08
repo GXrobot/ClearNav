@@ -1,6 +1,6 @@
 // Example/debugging code for server backend communication
 
-const debug = false;
+const debug = true;
 
 var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
@@ -96,9 +96,6 @@ function initMap() {
     if (!debug) {
         const sfu = new google.maps.LatLng(49.2781, -122.9199);
 
-        var mapOptions = {
-
-        }
         map = new google.maps.Map(document.getElementById('map'), {
             // map options
             disableDefaultUI: true,
@@ -141,7 +138,17 @@ function initMap() {
     }
 }
 
+// inform user that navigation worked and is now on the EZHud device
+function redirectUser() {
+    document.getElementById("loader").style.display = "none";
+    alert("Route sent to EZHud device");
+}
+
 function StartNavigation() {
+    // spin the loader for 3 seconds
+    document.getElementById("loader").style.display = "block";
+    setTimeout(redirectUser, 3000);
+
     const loc = document.getElementById("searchBarAndButton").querySelector("#searchTextField").value;
 
     // open google maps app

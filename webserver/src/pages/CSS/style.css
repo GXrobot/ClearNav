@@ -18,6 +18,33 @@ body {
 
 }
 
+/* loading spinner thing */
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 120px;
+    height: 120px;
+    margin: -76px 0 0 -76px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    display: none;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* .logo { */
 /*     position: fixed; */
 /*     top: 0; */
@@ -34,17 +61,17 @@ body {
 #searchTextField {
     background: url("../../assets/search_icon.png") left no-repeat;
     padding-left: 25px;
-    height: 35px;
+    height: 40px;
     width: 65%;
-    font-size: 16px;
+    font-size: 17px;
     border-radius: 15px;
     background-color: #f0f2f5;
     /* border: 3px solid green; */
 }
 
 .navStartButton {
-    font-size: 16px;
-    height: 35px;
+    font-size: 17px;
+    height: 45px;
     width: 80px;
     border-radius: 5px;
     background-color: #f0f2f5;
