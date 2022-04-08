@@ -1,6 +1,6 @@
 // Example/debugging code for server backend communication
 
-const debug = true;
+const debug = false;
 
 var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
@@ -81,27 +81,28 @@ function sendEZhudSettings() {
 	xhttp.send(updatedSettings)
 }
 
-// variables for initMap()
-let map;
-let service;
-let infowindow;
-
 // initialize the map widget
 // After clicking autocompleted address, show marker on map
 function initMap() {
-    console.log("hello");
     var input = document.getElementById('searchTextField');
 
     // production server has map stuff and address autocomplete
     if (!debug) {
-        const sfu = new google.maps.LatLng(49.2781, -122.9199);
 
-        map = new google.maps.Map(document.getElementById('map'), {
+        // objects for google maps route
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
+
+        // map instance
+        const sfu = new google.maps.LatLng(49.2781, -122.9199);
+        let map = new google.maps.Map(document.getElementById('map'), {
             // map options
             disableDefaultUI: true,
             center: sfu,
             zoom: 12,
         });
+
+        directionsRenderer.setMap(map);
 
         // infowindow on marker
         const infowindow = new google.maps.InfoWindow();
@@ -122,18 +123,32 @@ function initMap() {
 
         // listener for when we click on autocompleted address
         autocomplete.addListener("place_changed", () => {
-            infowindow.close();
-            marker.setVisible(false);
+            const dest = autocomplete.getPlace();
+
+            // build directions request
+            directionsService.route({
+                // hardcode current location to SFU
+                origin: sfu,
+                destination: dest,
+                travelMode: google.maps.TravelMode.DRIVING,
+                provideRouteAlternatives: false,
+                unitSystem: google.maps.UnitSystem.METRIC
+            })
+            .then((response) => { directionsRenderer.setDirections(response); })
+            .catch((e) => window.alert("Directions request failed due to " + status));
+
+            // infowindow.close();
+            // marker.setVisible(false);
 
             // pull up the new marker
-            const place = autocomplete.getPlace();
-            marker.setPosition(place.geometry.location);
-            marker.setVisible(true);
-            infowindowContent.children["place-name"].textContent = place.name;
-            infowindowContent.children["place-address"].textContent = place.formatted_address;
-            infowindow.open(map, marker);
-            var log = "Autocompleted address: " + place.formatted_address;
-            console.log("log: ", log);
+            // const place = autocomplete.getPlace();
+            // marker.setPosition(place.geometry.location);
+            // marker.setVisible(true);
+            // infowindowContent.children["place-name"].textContent = place.name;
+            // infowindowContent.children["place-address"].textContent = place.formatted_address;
+            // infowindow.open(map, marker);
+            // var log = "Autocompleted address: " + place.formatted_address;
+            // console.log("log: ", log);
         });
     }
 }
