@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const {exec} = require('child_process');
 
 const setHeaders = require('./src/middlewares/setHeaders');
 const updateRouter = require('./src/routes/update');
@@ -30,5 +31,8 @@ app.use('/*', pagesRouter);
 const server = http.createServer(app);
 server.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}/`);
+	// This is also done in startup.sh but it occasionally doesn't work
+	exec('csmt boot unlock');
+	exec('csmt system unlock');
 });
 
