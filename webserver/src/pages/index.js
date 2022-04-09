@@ -116,10 +116,10 @@ function initMap() {
         });
 
         // marker instance 
-        const marker = new google.maps.Marker({
-            map,
-            anchorPoint: new google.maps.Point(0, -29),
-        });
+        // const marker = new google.maps.Marker({
+        //     map,
+        //     anchorPoint: new google.maps.Point(0, -29),
+        // });
 
         // listener for when we click on autocompleted address
         autocomplete.addListener("place_changed", () => {
@@ -129,7 +129,10 @@ function initMap() {
             directionsService.route({
                 // hardcode current location to SFU
                 origin: sfu,
-                destination: dest,
+                destination: {
+                    query: dest.formatted_address
+                    // document.getElementById("searchTextField").value,
+                },
                 travelMode: google.maps.TravelMode.DRIVING,
                 provideRouteAlternatives: false,
                 unitSystem: google.maps.UnitSystem.METRIC
