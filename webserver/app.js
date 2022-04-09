@@ -11,7 +11,7 @@ const pagesRouter = require('./src/routes/pages');
 
 // Define the server
 const app = express();
-const port = 80;
+const port = 8080;
 
 app.use(setHeaders);
 app.use(express.json());
