@@ -52,10 +52,9 @@ body {
 /* } */
 
 #searchBarAndButton {
+    padding-top: 10px;
     margin: auto;
     width: 95%;
-    /* border: 3px solid green; */
-    padding: 0;
 }
 
 #searchTextField {
