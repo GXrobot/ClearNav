@@ -10,6 +10,6 @@ sudo apt install nodejs -y
 - Install dependencies using package.json: `npm install`
 
 To start the web server:
-1. Set the web server up as a service that automatically starts on system boot: `./setup_webserver_service.sh`
+1. Set the web server up as a service that automatically starts on system boot: `../setup_webserver_service.sh`
 2. Start the web server manually (using port 80 requires root permission): `sudo node app.js`
 
