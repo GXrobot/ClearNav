@@ -1,6 +1,6 @@
 // Example/debugging code for server backend communication
 
-const debug = false;
+const debug = true;
 
 var baseUrl = "http://10.0.0.18:8080";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
@@ -89,12 +89,14 @@ function initMap() {
     // production server has map stuff and address autocomplete
     if (!debug) {
 
-        // objects for google maps route
+        // objects for google maps marker, route, and info-window
         const directionsService = new google.maps.DirectionsService();
         const directionsRenderer = new google.maps.DirectionsRenderer();
+        const sfu = new google.maps.LatLng(49.2781, -122.9199);
+        const infowindow = new google.maps.InfoWindow();
+        const infowindowContent = document.getElementById("infowindow-content");
 
         // map instance
-        const sfu = new google.maps.LatLng(49.2781, -122.9199);
         let map = new google.maps.Map(document.getElementById('map'), {
             // map options
             disableDefaultUI: true,
@@ -104,10 +106,18 @@ function initMap() {
 
         directionsRenderer.setMap(map);
 
-        // infowindow on marker
-        const infowindow = new google.maps.InfoWindow();
-        const infowindowContent = document.getElementById("infowindow-content");
+        // place a marker on current location
         infowindow.setContent(infowindowContent);
+        const marker = new google.maps.Marker({
+            map,
+            anchorPoint: new google.maps.Point(0, -29),
+            position: sfu
+        });
+
+        marker.setVisible(true);
+        infowindowContent.children["place-name"].textContent = "Simon Fraser University";
+        infowindowContent.children["place-address"].textContent = "8888 University Dr, Burnaby, BC V5A 1S6";
+        infowindow.open(map, marker);
 
         // autocomplete instance in search bar
         const autocomplete = new google.maps.places.Autocomplete(input);
@@ -115,14 +125,13 @@ function initMap() {
             country: ["ca"],
         });
 
-        // marker instance 
-        // const marker = new google.maps.Marker({
-        //     map,
-        //     anchorPoint: new google.maps.Point(0, -29),
-        // });
-
         // listener for when we click on autocompleted address
         autocomplete.addListener("place_changed", () => {
+
+            // remove current location marker
+            infowindow.close();
+            marker.setVisible(false);
+
             const dest = autocomplete.getPlace();
 
             // build directions request
@@ -140,16 +149,8 @@ function initMap() {
             .then((response) => { directionsRenderer.setDirections(response); })
             .catch((e) => window.alert("Directions request failed due to " + status));
 
-            // infowindow.close();
-            // marker.setVisible(false);
 
             // pull up the new marker
-            // const place = autocomplete.getPlace();
-            // marker.setPosition(place.geometry.location);
-            // marker.setVisible(true);
-            // infowindowContent.children["place-name"].textContent = place.name;
-            // infowindowContent.children["place-address"].textContent = place.formatted_address;
-            // infowindow.open(map, marker);
             // var log = "Autocompleted address: " + place.formatted_address;
             // console.log("log: ", log);
         });
