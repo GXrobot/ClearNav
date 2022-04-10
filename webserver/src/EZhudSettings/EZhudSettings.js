@@ -330,7 +330,7 @@ function setWifiSSID(ssid) {
 	} else {
 		console.log(`	setWifiSSID(): Setting client Wifi SSID to ${ssid}`);			
 		try {
-			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID=${ssid}/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID="${ssid}"/' ${CS_ENV_FILE}`);
 			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
 		} catch(err) {
 			console.log('	setWifiSSID(): Failed to set client country');
@@ -394,7 +394,7 @@ function setWifiPSK(psk) {
 	} else {
 		console.log(`	setWifiPSK(): Setting client PSK to ${psk}`);
 		try {
-			execSync(`sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK=${psk}/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK="${psk}"/' ${CS_ENV_FILE}`);
 			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
 		} catch(err) {
 			console.log(`	setWifiPSK(): Failed to set client PSK`);
