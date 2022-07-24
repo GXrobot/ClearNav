@@ -32,24 +32,6 @@ const server = http.createServer(app);
 server.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}/`);
 
-	// This is also done in startup.sh but it occasionally doesn't work
-	console.log('Unlocking /boot');
-	exec('csmt boot unlock', (err, stdout, stderr) => {
-		if( err ) {
-			console.log('Failed to unlock /boot:', err);
-		} else {
-			console.log('Successfully unlocked /boot');
-		}
-	});
-	console.log('Unlocking /');
-	exec('csmt system unlock', (err, stdout, stderr) => {
-		if( err ) {
-			console.log('Failed to unlock /:', err);
-		} else {
-			console.log('Successfully unlocked /');
-		}
-	});
-
 	// Adjust the address requests are sent to in index.js
 	console.log('Looking for host IP address');
 	exec('hostname --all-ip-addresses', (err, stdout, stderr) => {

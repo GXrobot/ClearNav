@@ -2,7 +2,6 @@
 # This script adds a service for the EZhud web server and cofigures systemd to
 # start the server on boot
 
-csmt system unlock
 sudo cp ./ezhud-webserver.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable ezhud-webserver.service
@@ -10,4 +9,3 @@ sudo systemctl enable ezhud-webserver.service
 # This causes systemctl restart to hang
 sudo systemctl restart ezhud-webserver.service &
 sync
-csmt system lock
