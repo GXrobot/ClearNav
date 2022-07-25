@@ -10,7 +10,7 @@ import adafruit_gps
 
 uart = serial.Serial(
         # try ports ttyS0, ttyUSB0, ttyAMA0 if not working
-        port='/dev/ttyUSB0',                # read/write sereal port
+        port='/dev/ttyS0',                # read/write sereal port
         baudrate = 9600,                    # data transfer: 9500 bits per second
         parity=serial.PARITY_NONE,          # no parity checking
         stopbits=serial.STOPBITS_ONE,       # indicates end of data transmission

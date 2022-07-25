@@ -13,7 +13,7 @@ import PySimpleGUI as sg
 
 uart = serial.Serial(
         # try ports ttyS0, ttyUSB0, ttyAMA0 if not working
-        port='/dev/ttyUSB0',                # read/write sereal port
+        port='/dev/ttyS0',                # read/write sereal port
         baudrate = 9600,                    # data transfer: 9500 bits per second
         parity=serial.PARITY_NONE,          # no parity checking
         stopbits=serial.STOPBITS_ONE,       # indicates end of data transmission
@@ -34,7 +34,7 @@ layout = [
     [sg.Button("Close", key='Close')]
 ]
 
-window = sg.Window('GPS Demo', layout, no_titlebar=True, size=(400,800), keep_on_top=True, element_justification='c')
+window = sg.Window('GPS Demo', layout, size=(800,480), keep_on_top=None, element_justification='c')
 # window.Maximize()
 
 # Initialize the GPS module
