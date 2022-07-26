@@ -32,4 +32,4 @@
 *.app
 
 # Nodejs Packages
-node_nodules/
+*node_nodules/
