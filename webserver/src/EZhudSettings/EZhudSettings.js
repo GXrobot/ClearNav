@@ -1,7 +1,7 @@
 const fs = require('fs');
 const {exec, execSync} = require('child_process');
 
-const CS_ENV_FILE = '/boot/crankshaft/crankshaft_env.sh';
+const WPA_CONF_FILE = '/etc/wpa_supplicant.wpa_supplicant.conf';
 const HOSTAPD_CONF = '/etc/hostapd/hostapd.conf';
 
 // System always boots in day mode
@@ -42,20 +42,20 @@ function setEZhudSettings(newSettings) {
 		switch(key) {
 			case 'brightness_mode':
 				console.log('setEZhudSettings(): brightness_mode');
-				setBrightnessMode(value);
+				//setBrightnessMode(value);
 				break;
 			case 'brightness_level':
 				console.log('setEZhudSettings(): brightness_level');
-				setBrightnessLevel(value);
+				//setBrightnessLevel(value);
 				break;
 			case 'wifi_mode':
 				console.log('setEZhudSettings(): wifi_mode');
-				setWifiMode(value);
+				//setWifiMode(value);
 				rebootNeeded = true;
 				break;
 			case 'wifi_country':
 				console.log('setEZhudSettings(): wifi_country');
-				setWifiCountry(value);
+				//setWifiCountry(value);
 				rebootNeede = true;
 				break;
 			case 'wifi_ssid':
@@ -103,6 +103,8 @@ function setBrightnessMode(mode) {
 
 	console.log('	setBrightnessMode()');
 
+	return 0;
+
 	// Check we got a valid mode
 	if( mode != 'day' && mode != 'night' ) {
 		console.log(`	setBrightnessMode(): Unexected mode: ${mode}`);
@@ -136,9 +138,13 @@ function setBrightnessLevel(level) {
 
 }
 
+// TODO: Fix later
 function getWifiMode() {
 
 	console.log('	getWifiMode()');
+
+	return 'Client';
+
 	var bashCmd = `grep ${CS_ENV_FILE} -e ENABLE_HOTSPOT`;
 	var wifiMode = 'Error';
 
@@ -158,9 +164,12 @@ function getWifiMode() {
 
 }
 
+// TODO: Fix later
 function setWifiMode(mode) {
 
 	console.log('	setWifiMode()');
+
+	return 0;
 
 	if( mode != 'hotspot' && mode != 'client' ) {
 		console.log(`	setWifiMode(): Unexpected wifi mode: ${mode}`);
@@ -208,9 +217,13 @@ function setWifiMode(mode) {
 
 }
 
+// TODO: Fix later
 function getWifiCountry() {
 
 	console.log('	getWifiCountry()');
+
+	return 'CA';
+
 	var bashCmd = '';
 	var wifiCountry = 'Error';
 
@@ -236,9 +249,12 @@ function getWifiCountry() {
 
 }
 
+// TODO: Fix later
 function setWifiCountry(country) {
 
 	console.log('	setWifiCountry()');
+
+	return 0;
 
 	// Could replace this with a comparison against a list since the accepted codes are known
 	if( !(country.match(/^[A-Z][A_Z]$/)) ) {
@@ -275,9 +291,13 @@ function setWifiCountry(country) {
 
 }
 
+// TODO: Fix later
 function getWifiSSID() {
 
 	console.log('	getWifiSSID()');
+
+	return 'WiFi';
+
 	var bashCmd = '';
 	var wifiSSID = 'Error';
 
@@ -304,17 +324,30 @@ function getWifiSSID() {
 
 }
 
+// TODO: Allow setting AP mode SSID?
 function setWifiSSID(ssid) {
 
 	console.log('	setWifiSSID()');
 
 	// https://stackoverflow.com/questions/4919889/is-there-a-standard-that-defines-what-is-a-valid-ssid-and-password
-	// Any 0 to 32 length 'string' is allowed (technically octets but I don't think we can get non-ASCII characters from a POST query)
+	// Any 0 to 32 length 'string' is allowed
 	if( ssid.length > 32 ) {
 		console.log(`	setWifiSSID(): Invalid length SSID: ${ssid}:${ssid.length}`);
 		return 1;
 	}
 
+	try{
+		execSync(`sudo sed -i 's/ssid=.*/ssid="${ssid}"/' ${WPA_CONF_FILE}`);
+	} catch(err) {
+		console.log('	setWifiSSID(): Failed to set SSID');
+		console.log('	setWifiSSID(): err', err);
+		console.log('	setWifiSSID(): stderr', err.stderr.toString());
+		return 1;
+	}
+
+	return 0;
+
+	// This variable is useless. Rewrite as in getWifiPSK()?
 	var bashCmd = '';
 
 	if( getWifiMode() == 'hotspot' ) {
@@ -322,7 +355,7 @@ function setWifiSSID(ssid) {
 		try {
 			execSync(`sudo sed -i 's/ssid=.*/ssid=${ssid}/' ${HOSTAPD_CONF}`);
 		} catch(err) {
-			console.log('	setWifiSSID(): Failed to set hotspot country');
+			console.log('	setWifiSSID(): Failed to set hotspot SSID');
 			console.log('	setWifiSSID(): err', err);
 			console.log('	setWifiSSID(): stderr', err.stderr.toString());
 			return 1;
@@ -333,7 +366,7 @@ function setWifiSSID(ssid) {
 			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID="${ssid}"/' ${CS_ENV_FILE}`);
 			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
 		} catch(err) {
-			console.log('	setWifiSSID(): Failed to set client country');
+			console.log('	setWifiSSID(): Failed to set client SSID');
 			console.log('	setWifiSSID(): err', err);
 			console.log('	setWifiSSID(): stderr', err.stderr.toString());
 			return 1;
@@ -344,9 +377,13 @@ function setWifiSSID(ssid) {
 
 }
 
+// TODO: Fix later
 function getWifiPSK() {
 
 	console.log('	getWifiPSK()');
+
+	return 'password';
+
 	var bashCmd = '';
 	var wifiPSK = 'Error';
 
@@ -372,6 +409,7 @@ function getWifiPSK() {
 
 }
 
+// TODO: Allow setting AP mode PSK?
 function setWifiPSK(psk) {
 
 	console.log('	setWifiPSK()');
@@ -379,6 +417,18 @@ function setWifiPSK(psk) {
 	// Password validation?
 	// https://w1.fi/cgit/hostap/plain/hostapd/hostapd.conf
 	
+	try{
+		execSync(`sudo sed -i 's/psk=.*/psk="${psk}"/' ${WPA_CONF_FILE}`);
+	} catch(err) {
+		console.log(`	setWifiPSK(): Failed to set PSK`);
+		console.log('	setWifiPSK(): err', err);
+		console.log('	setWifiPSK(): stderr', err.stderr.toString());
+		return 1;
+	}
+
+	return 0;
+
+	// This variable is useless. Rewrite as in getWifiPSK()?
 	var bashCmd = '';
 
 	if( getWifiMode() == 'hotspot' ) {
