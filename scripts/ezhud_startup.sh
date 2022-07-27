@@ -3,7 +3,6 @@
 # For the 4" screen
 scrn=$(xrandr | grep -c 'HDMI-1 connected primary 480x800+0+0')
 if [ "$scrn" -eq "1" ]; then
-	echo "rotating" >> /home/pi/Documents/xrandr_out
 	sleep 5
 	xrandr --output HDMI-1 --rotate left
 fi
