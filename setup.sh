@@ -75,6 +75,8 @@ cd dash
 # All of these settings could be done through raspi-config
 
 # Enable legacy camera
+echo "Enabling camera"
+
 if grep -qE "^#?start_x=[01]" /boot/config.txt; then
 	sudo sed -i 's/^#\?start_x=[01]/start_x=1/' /boot/config.txt
 else
@@ -88,23 +90,27 @@ else
 fi
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
+echo "Copying over device tree"
 sudo cp WS-dt-blob.bin /boot/dt-blob.bin
 
 # Every time we configure the Pi manually raspi-config switches from KMS to Fake KMS
-if grep -qE "^#?dtoverlay=vc4-kms-v3d"; then
-	sudo sed -i 's/^#\?dtoverlay=vc4-kms-v3d/dtoverlay=vc4-fkms-v3d/' /boot/config.txt
+echo "Changing to fkms"
+if grep -qE "^#?dtoverlay=vc4-f?kms-v3d" /boot/config.txt; then
+	sudo sed -i 's/^#\?dtoverlay=vc4-f\?kms-v3d/dtoverlay=vc4-fkms-v3d/' /boot/config.txt
 else
 	sudo echo "dtoverlay=vc4-fkms-v3d" >> /boot/config.txt
 fi
 
 # Enable UART
-if grep -qE "^#?enable_uart=[01]"; then /boot/config.txt
+echo "Enabling UART"
+if grep -qE "^#?enable_uart=[01]" /boot/config.txt; then
 	sudo sed -i 's/^#\?enable_uart=[01]/enable_uart=1/' /boot/config.txt
 else
 	sudo echo "enable_uart=1" >> /boot/config.txt
 fi
 
 # Set HDMI boost to 7
+echo "Setting HDMI boost"
 if grep -qE "^#?config_hdmi_boost=[01234567]" /boot/config.txt; then
 	sudo sed -i 's/^#\?config_hdmi_boost=[01234567]/config_hdmi_boost=7/' /boot/config.txt
 else
@@ -113,6 +119,7 @@ fi
 
 # Disable screen blanking
 # This is copied from raspi-config
+echo "Disabling screen blanking"
 sudo rm -f /etc/X11/xorg.conf.d/10-blanking.conf
 sudo sed -i '/^\o033/d' /etc/issue
 sudo mkdir /etc/X11/xorg.conf.d/
@@ -120,21 +127,28 @@ sudo cp /usr/share/raspi-config/10-blanking.conf /etc/X11/xorg.conf.d/
 sudo printf "\\033[9:0]" >> /etc/issue
 
 # Enable the USB port on the CM4
-if gre -qE "^#?dtoverlay=dwc2,dr_mode=.*" /boot/config.txt; then
-	sudo sed -i '^#\?dtoverlay=dwc2,dr_mode=.*/dtoverlay=dwc2,dr_mode=host/' /boot/config.txt
+echo "Enabling CM4 USB"
+if grep -qE "^#?dtoverlay=dwc2,dr_mode=.*" /boot/config.txt; then
+	sudo sed -i 's/^#\?dtoverlay=dwc2,dr_mode=.*/dtoverlay=dwc2,dr_mode=host/' /boot/config.txt
 else
 	sudo echo "dtoverlay=dwc2,dr_mode=host" >> /boot/config.txt
 fi
 
 # Change hostname
-sudo echo "EZhud" > /etc/hostname
-sudo sed -i 's/127.0.1.1.*raspberrypi/127.0.1.1\tEZhud/g' /etc/hosts
+echo "Changing hostname"
+
+# Echoing into /etc/hostname doesn't work unless the script is called by root
+sudo sed -i 's/.*/EZhud/' /etc/hostname
+sudo sed -i 's/127.0.1.1.*/127.0.1.1\tEZhud/g' /etc/hosts
 
 # Right click on the menu bar and select 'Panel Settings'
 # Under 'Advanced', check 'Minimuze panel when not in use'
 # and set 'Size when minimized' to 0
 
 sync
+
+echo "Rebooting"
+sleep 5
 sudo reboot
 
 exit 0
