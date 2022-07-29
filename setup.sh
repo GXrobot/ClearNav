@@ -128,6 +128,11 @@ sudo mkdir /etc/X11/xorg.conf.d/
 sudo cp /usr/share/raspi-config/10-blanking.conf /etc/X11/xorg.conf.d/
 sudo printf "\\033[9:0]" >> /etc/issue
 
+# Set menubar to autohide
+echo "Hiding menubar"
+sudo sed -i 's/autohide=./autohide=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+
 # Enable the USB port on the CM4
 echo "Enabling CM4 USB"
 if grep -qE "^#?dtoverlay=dwc2,dr_mode=.*" /boot/config.txt; then
