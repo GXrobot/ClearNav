@@ -6,6 +6,6 @@ ipaddr=$(ifconfig wlan0 | grep -c "inet ")
 if [ "$ipaddr" -eq "0" ]
 then
 	logger "No network detected. Switching to AP mode"
-	sudo /home/pi/Documents/ap_mode.sh
+	sudo /home/pi/ClearNav/scripts/ap_mode.sh
 fi
 
