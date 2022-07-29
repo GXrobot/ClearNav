@@ -34,7 +34,7 @@ layout = [
     [sg.Button("Close", key='Close')]
 ]
 
-window = sg.Window('GPS Demo', layout, size=(800,480), keep_on_top=None, element_justification='c')
+window = sg.Window('GPS Demo', layout, size=sg.Window.get_screen_size(), keep_on_top=None, element_justification='c')
 # window.Maximize()
 
 # Initialize the GPS module
