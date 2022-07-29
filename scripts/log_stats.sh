@@ -4,8 +4,6 @@
 # Can provide a different time interval if desired
 # Also writes to a file in CSV format. The file can be changed if a time interval is given
 
-# Constants
-
 # Figure out where the script is being called from to avoid issues with calling the script from different paths
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # Where log files are placed
@@ -19,7 +17,7 @@ FLUSH_FREQ=60
 # How many Hz in one MHz
 MEGA_HERTZ=1000000
 
-# Confirm we were given a valid number of iterations
+# Confirm we were given a valid duration
 if ! [[ "$1" =~ ([0-9]+$) ]]; then
 	echo "Invalid logging interval given. Falling back to default recording time of $DEFAULT_RECORDING_TIME(s)"
 	time=$DEFAULT_RECORDING_TIME

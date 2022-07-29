@@ -64,6 +64,8 @@ Name=EZhudStartup
 Exec=/bin/bash /home/pi/ClearNav/scripts/ezhud_startup.sh
 ' > /etc/xdg/autostart/display.desktop"
 
+#sudo bash -c "echo '@bash /home/pi/ClearNav/scripts/log_stats.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart"
+
 cd /home/pi
 git clone https://github.com/openDsh/dash.git
 

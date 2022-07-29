@@ -7,8 +7,6 @@ if [ "$scrn" -eq "1" ]; then
 	xrandr --output HDMI-1 --rotate left
 fi
 
-# Start all our scripts
-/home/pi/ClearNav/scripts/logs_stats.sh /home/pi/Documents &
 # OpenDash's own service is broken, start ourselves
 /home/pi/dash/bin/dash &
 /home/pi/ClearNav/GPS/serial_read_gui.py &
