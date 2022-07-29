@@ -3,8 +3,13 @@
 # For the 4" screen
 scrn=$(xrandr | grep -c 'HDMI-1 connected primary 480x800+0+0')
 if [ "$scrn" -eq "1" ]; then
-	sleep 5
+	# Rotating the screen needs a slightly longer wait, otherwise UI may grab vertical sizes
+	sleep 3
 	xrandr --output HDMI-1 --rotate left
+else
+	# Need a wait to avoid menubar issues
+	# 1 second only lets us see a blurred desktop background before UI loads
+	sleep 1
 fi
 
 # OpenDash's own service is broken, start ourselves
