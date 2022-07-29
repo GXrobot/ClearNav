@@ -70,7 +70,6 @@ cd /home/pi
 git clone https://github.com/openDsh/dash.git
 
 cd dash
-#git checkout cb073e60cf4adf95dad980e99f8be5ed76c654a1
 ./install.sh
 
 # Change some settings
@@ -82,13 +81,13 @@ echo "Enabling camera"
 if grep -qE "^#?start_x=[01]" /boot/config.txt; then
 	sudo sed -i 's/^#\?start_x=[01]/start_x=1/' /boot/config.txt
 else
-	sudo echo 'start_x=1' >> /boot/config.txt
+	sudo bash -c "echo 'start_x=1' >> /boot/config.txt"
 fi
 
 if grep -qE "^#?gpu_mem=[1234567890]*" /boot/config.txt; then
 	sudo sed -i 's/^#\?gpu_mem=[1234567890]*/gpu_mem=128/' /boot/config.txt
 else
-	sudo echo 'gpu_mem=128' >> /boot/config.txt
+	sudo bash -c "echo 'gpu_mem=128' >> /boot/config.txt"
 fi
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
@@ -100,7 +99,7 @@ echo "Changing to fkms"
 if grep -qE "^#?dtoverlay=vc4-f?kms-v3d" /boot/config.txt; then
 	sudo sed -i 's/^#\?dtoverlay=vc4-f\?kms-v3d/dtoverlay=vc4-fkms-v3d/' /boot/config.txt
 else
-	sudo echo "dtoverlay=vc4-fkms-v3d" >> /boot/config.txt
+	sudo bash -c "echo 'dtoverlay=vc4-fkms-v3d' >> /boot/config.txt"
 fi
 
 # Enable UART
@@ -108,7 +107,7 @@ echo "Enabling UART"
 if grep -qE "^#?enable_uart=[01]" /boot/config.txt; then
 	sudo sed -i 's/^#\?enable_uart=[01]/enable_uart=1/' /boot/config.txt
 else
-	sudo echo "enable_uart=1" >> /boot/config.txt
+	sudo bash -c "echo 'enable_uart=1' >> /boot/config.txt"
 fi
 
 # Set HDMI boost to 7
@@ -116,7 +115,7 @@ echo "Setting HDMI boost"
 if grep -qE "^#?config_hdmi_boost=[01234567]" /boot/config.txt; then
 	sudo sed -i 's/^#\?config_hdmi_boost=[01234567]/config_hdmi_boost=7/' /boot/config.txt
 else
-	sudo echo "config_hdmi_boost=7" >> /boot/config.txt
+	sudo bash -c "echo 'config_hdmi_boost=7' >> /boot/config.txt"
 fi
 
 # Disable screen blanking
@@ -126,7 +125,7 @@ sudo rm -f /etc/X11/xorg.conf.d/10-blanking.conf
 sudo sed -i '/^\o033/d' /etc/issue
 sudo mkdir /etc/X11/xorg.conf.d/
 sudo cp /usr/share/raspi-config/10-blanking.conf /etc/X11/xorg.conf.d/
-sudo printf "\\033[9:0]" >> /etc/issue
+sudo bash -c "printf '\\033[9:0]' >> /etc/issue"
 
 # Set menubar to autohide
 echo "Hiding menubar"
@@ -138,7 +137,7 @@ echo "Enabling CM4 USB"
 if grep -qE "^#?dtoverlay=dwc2,dr_mode=.*" /boot/config.txt; then
 	sudo sed -i 's/^#\?dtoverlay=dwc2,dr_mode=.*/dtoverlay=dwc2,dr_mode=host/' /boot/config.txt
 else
-	sudo echo "dtoverlay=dwc2,dr_mode=host" >> /boot/config.txt
+	sudo bash -c "echo 'dtoverlay=dwc2,dr_mode=host' >> /boot/config.txt"
 fi
 
 # Change hostname
