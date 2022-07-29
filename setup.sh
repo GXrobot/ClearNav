@@ -78,6 +78,8 @@ cd dash
 # Enable legacy camera
 echo "Enabling camera"
 
+sudo sed -i 's/^#\?camera_auto_detect=[01]//' /boot/config.txt
+
 if grep -qE "^#?start_x=[01]" /boot/config.txt; then
 	sudo sed -i 's/^#\?start_x=[01]/start_x=1/' /boot/config.txt
 else
@@ -92,10 +94,12 @@ fi
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
 echo "Copying over device tree"
+
 sudo cp WS-dt-blob.bin /boot/dt-blob.bin
 
 # Every time we configure the Pi manually raspi-config switches from KMS to Fake KMS
 echo "Changing to fkms"
+
 if grep -qE "^#?dtoverlay=vc4-f?kms-v3d" /boot/config.txt; then
 	sudo sed -i 's/^#\?dtoverlay=vc4-f\?kms-v3d/dtoverlay=vc4-fkms-v3d/' /boot/config.txt
 else
@@ -104,6 +108,7 @@ fi
 
 # Enable UART
 echo "Enabling UART"
+
 if grep -qE "^#?enable_uart=[01]" /boot/config.txt; then
 	sudo sed -i 's/^#\?enable_uart=[01]/enable_uart=1/' /boot/config.txt
 else
@@ -112,6 +117,7 @@ fi
 
 # Set HDMI boost to 7
 echo "Setting HDMI boost"
+
 if grep -qE "^#?config_hdmi_boost=[01234567]" /boot/config.txt; then
 	sudo sed -i 's/^#\?config_hdmi_boost=[01234567]/config_hdmi_boost=7/' /boot/config.txt
 else
@@ -121,19 +127,25 @@ fi
 # Disable screen blanking
 # This is copied from raspi-config
 echo "Disabling screen blanking"
+
 sudo rm -f /etc/X11/xorg.conf.d/10-blanking.conf
 sudo sed -i '/^\o033/d' /etc/issue
+
 sudo mkdir /etc/X11/xorg.conf.d/
 sudo cp /usr/share/raspi-config/10-blanking.conf /etc/X11/xorg.conf.d/
 sudo bash -c "printf '\\033[9:0]' >> /etc/issue"
 
 # Set menubar to autohide
 echo "Hiding menubar"
+
 sudo sed -i 's/autohide=./autohide=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
 sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
 
 # Enable the USB port on the CM4
 echo "Enabling CM4 USB"
+
+sudo sed -i 's/^#\?otg_mode=[01]//' /boot/config.txt
+
 if grep -qE "^#?dtoverlay=dwc2,dr_mode=.*" /boot/config.txt; then
 	sudo sed -i 's/^#\?dtoverlay=dwc2,dr_mode=.*/dtoverlay=dwc2,dr_mode=host/' /boot/config.txt
 else
@@ -143,13 +155,8 @@ fi
 # Change hostname
 echo "Changing hostname"
 
-# Echoing into /etc/hostname doesn't work unless the script is called by root
 sudo sed -i 's/.*/EZhud/' /etc/hostname
 sudo sed -i 's/127.0.1.1.*/127.0.1.1\tEZhud/g' /etc/hosts
-
-# Right click on the menu bar and select 'Panel Settings'
-# Under 'Advanced', check 'Minimuze panel when not in use'
-# and set 'Size when minimized' to 0
 
 sync
 
