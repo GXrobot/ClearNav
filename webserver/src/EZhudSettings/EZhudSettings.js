@@ -74,32 +74,20 @@ function setEZhudSettings(newSettings) {
 
 }
 
-// TODO: Fix later
+// Assumes whatever is set by wpa_cli matches what is in hostapd
 function getWifiCountry() {
 
 	console.log('	getWifiCountry()');
 
-	return 'CA';
-
-	var bashCmd = '';
 	var wifiCountry = 'Error';
 
-	if( getWifiMode() == 'hotspot' ) {
-		bashCmd = `grep ${HOSTAPD_CONF} -e country_code`;
-	} else {
-		bashCmd = `grep ${CS_ENV_FILE} -e WIFI_COUNTRY`;
-	}
-
-	console.log(`	getWifiCountry(): bashCmd=${bashCmd}`);
-
 	try {
-		let res = execSync(bashCmd);
-		console.log(`	getWifiCountry(): res.toString()=${res.toString()}`);
-		wifiCountry = res.toString().replace(/["\n]+/g, '').split('=')[1];
-		console.log(`	getWifiCountry(): wifiCountry=${wifiCountry}`);
+		let res = execSync('sudo wpa_cli -i wlan0 get country');
+		wifiCountry = res.toString();
+		console.log(`	getWifiCountry(): wifiCOuntry=${wifiCountry}`);
 	} catch(err) {
 		console.log('	getWifiCountry(): err', err);
-		console.log('	getWifiCountry(): stderr', err.stderr.toString());
+		console.log('	getWifiCountry: stderr', err.stderr.tostring());
 	}
 
 	return wifiCountry;
