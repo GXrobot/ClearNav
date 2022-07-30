@@ -2,7 +2,8 @@
 
 const debug = true;
 
-var baseUrl = "http://10.0.0.18:8080";
+// var baseUrl = "http://10.0.0.18:8080";
+var baseUrl = "localhost:80";
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
 // This function queries the server for updated settings
@@ -33,17 +34,14 @@ function getEZhudSettings() {
 // This function sends updated settings to the server
 // Expects the settings and their values to be returned as a JSON
 function sendEZhudSettings() {
-    // var country_select = document.getElementById('country-names');
+
     var country = document.querySelector(`[id=country-names]`);
     var wifi_mode = document.querySelector(`[id=mode-names]`);
-    var brightness_mode = document.querySelector(`[id=bright-names]`);
-    var brightness_level = document.getElementById('range');
     var wifi_ssid = document.getElementById('wifi-ssid');
     var wifi_psk = document.getElementById('wifi-psk');
 
     // incomplete settings by user
-    if (country.value === "Choose..." || wifi_mode.value === "Choose..." || brightness_mode.value === "Choose..." ||
-        wifi_ssid.value === "" || wifi_psk.value === "") {
+    if (country.value === "Choose..." || wifi_mode.value === "Choose..." || wifi_ssid.value === "" || wifi_psk.value === "") {
         alert("Incomplete Settings. Please try again");
         return;
     }
@@ -52,8 +50,6 @@ function sendEZhudSettings() {
 	// var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
 	var updatedSettings = "wifi_mode=" + wifi_mode.value + 
                           "&wifi_country=" + country.value + 
-                          "&brightness_mode=" + brightness_mode.value + 
-                          "&brightness_level=" + brightness_level.value + 
                           "&wifi_ssid=" + wifi_ssid.value + 
                           "&wifi_psk=" + wifi_psk.value;
 

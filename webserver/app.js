@@ -32,24 +32,24 @@ const server = http.createServer(app);
 server.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}/`);
 
-	// Adjust the address requests are sent to in index.js
-	console.log('Looking for host IP address');
-	exec('hostname --all-ip-addresses', (err, stdout, stderr) => {
+// 	// Adjust the address requests are sent to in index.js
+// 	console.log('Looking for host IP address');
+// 	exec('hostname --all-ip-addresses', (err, stdout, stderr) => {
 
-		if( err ) {
-			console.log('Failed to find host IP address:', err);
-		} else {
-			// Some situations give multiple IP addresses, the first one is the one we want
-			let ipaddr = stdout.split(' ')[0];
-			console.log(`Setting baseURL in index.js to 'http://${ipaddr}:8080'`);
-			exec(`sed -i  --expression 's@var baseUrl = "http://.*:8080";@var baseUrl = "http://${ipaddr}:8080";@' /home/pi/ClearNav/webserver/src/pages/index.js`, (err, stdout, stderr) => {
-				if( err ) {
-					console.log('Failed to set baseURL:', err);
-				} else {
-					console.log(`Successfully set baseURL to ${ipaddr}`);
-				}
-			});
-		}
-	});
+// 		if( err ) {
+// 			console.log('Failed to find host IP address:', err);
+// 		} else {
+// 			// Some situations give multiple IP addresses, the first one is the one we want
+// 			let ipaddr = stdout.split(' ')[0];
+// 			console.log(`Setting baseURL in index.js to 'http://${ipaddr}:8080'`);
+// 			exec(`sed -i  --expression 's@var baseUrl = "http://.*:8080";@var baseUrl = "http://${ipaddr}:8080";@' /home/pi/ClearNav/webserver/src/pages/index.js`, (err, stdout, stderr) => {
+// 				if( err ) {
+// 					console.log('Failed to set baseURL:', err);
+// 				} else {
+// 					console.log(`Successfully set baseURL to ${ipaddr}`);
+// 				}
+// 			});
+// 		}
+// 	});
 });
 

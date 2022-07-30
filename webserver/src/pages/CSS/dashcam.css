@@ -1,0 +1,95 @@
+* {
+    margin-left: 10px;
+}
+
+h1 {
+    color: black;
+    padding-top: 25px;
+}
+
+/* kill horizontal scrolling */
+html, body {
+    overflow-x: hidden;
+}
+
+#video-container1, #video-container2, #video-container3 {
+    width: 100%;
+    height: 100px;
+    white-space: nowrap;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    /* -webkit-overflow-scrolling: touch; */
+}
+
+#video-container1 .card {
+    background: url(../new_play.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80px;
+    width: 24.5%;
+    background-color: #eee;
+    float: none;
+    height: 75px;
+    margin: 0 0.25%;
+    display: inline-block;
+    zoom: 1;
+}
+
+#video-container2 .card {
+    background: url(../new_play.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80px;
+    width: 24.5%;
+    background-color: #eee;
+    float: none;
+    height: 75px;
+    margin: 0 0.25%;
+    display: inline-block;
+    zoom: 1;
+}
+
+#video-container3 .card {
+    background: url(../new_play.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80px;
+    width: 24.5%;
+    background-color: #eee;
+    float: none;
+    height: 75px;
+    margin: 0 0.25%;
+    display: inline-block;
+    zoom: 1;
+}
+
+.card {
+}
+
+.nav_link-active {
+    color: #009578;
+}
+
+.navBar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    background-color: #f0f2f5;
+    overflow-x: auto;
+    margin-left: -10px;
+}
+
+.nav_icon {
+    font-size: 18px;
+}
+
+.updateFiles {
+    display: block;     /* input elements are in-line */
+    margin: auto;
+    font-size: 18px;
+    width: 75%;
+}
+@import '~material-design-icons/iconfont/material-icons.css';

@@ -35,6 +35,12 @@ body {
     display: none;
 }
 
+/* searchbar placeholder text */
+input[type="text"]::placeholder {
+    text-align: center;
+    /* padding-left: 200px; */
+}
+
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
@@ -52,9 +58,10 @@ body {
 /* } */
 
 #searchBarAndButton {
-    padding-top: 10px;
     margin: auto;
-    width: 95%;
+    text-align: center;
+    width: 100%;
+    padding: 0;
 }
 
 #searchTextField {
@@ -66,6 +73,7 @@ body {
     border-radius: 15px;
     background-color: #f0f2f5;
     /* border: 3px solid green; */
+    background-origin: content-box;
 }
 
 .navStartButton {
@@ -115,3 +123,5 @@ body {
 .nav_icon {
     font-size: 18px;
 }
+
+@import '~material-design-icons/iconfont/material-icons.css';

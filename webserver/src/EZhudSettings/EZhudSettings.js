@@ -1,4 +1,6 @@
 const fs = require('fs');
+const path = require('path');
+const RECORD_DIR = "/home/pi/recordings";
 const {exec, execSync} = require('child_process');
 
 const WPA_CONF_FILE = '/etc/wpa_supplicant.wpa_supplicant.conf';
@@ -90,6 +92,37 @@ function setEZhudSettings(newSettings) {
 	
 	return getEZhudSettings();
 
+}
+
+// get all .mp4 files in filesystem generated from dashcam
+// function is used to populate dashcam html page
+function getAllVideoFiles() {
+    console.log('getAllVideoFiles() called');
+
+    const fileList = [];
+    fs.readdir(RECORD_DIR, function (err, files) {
+
+        if (err) {
+            return console.log('Unable to read directory: ' + err);
+        } 
+
+        
+        files.forEach(function (file) {
+
+            // check for mp4 files here
+            
+            fileList.push(file);
+        });
+    });
+
+    return fileList;
+}
+
+// get specific video file
+// function is used when user clicks specific video file
+function fetchVideoFile(file) {
+    console.log('fetchVideoFile() called');
+    // TODO
 }
 
 function getBrightnessMode() {
@@ -460,5 +493,7 @@ function setWifiPSK(psk) {
 
 module.exports = {
 	getEZhudSettings,
-	setEZhudSettings
+	setEZhudSettings,
+    getAllVideoFiles,
+    fetchVideoFile
 }

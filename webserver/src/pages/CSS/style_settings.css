@@ -1,5 +1,5 @@
 h1 {
-    color: white;
+    color: black;
     padding-top: 25px;
     margin-left: 10px;
 }
@@ -7,7 +7,7 @@ h1 {
 .input-group-prepend, .btn-primary  {
     margin-left: 10px;
     margin-right: 20px;
-    width: 150px;
+    width: 110px;
 }
 
 .custom-select {
@@ -67,3 +67,7 @@ h1 {
 .nav_icon {
     font-size: 18px;
 }
+
+/* ========== self hosting google fonts ============= */
+@import "./material-icons.css";
+
