@@ -1,7 +1,7 @@
 const fs = require('fs');
 const {exec, execSync} = require('child_process');
 
-const WPA_CONF_FILE = '/etc/wpa_supplicant.wpa_supplicant.conf';
+const WPA_CONF_FILE = '/etc/wpa_supplicant/wpa_supplicant.conf';
 const HOSTAPD_CONF = '/etc/hostapd/hostapd.conf';
 
 // System always boots in day mode
