@@ -4,8 +4,6 @@ const {exec, execSync} = require('child_process');
 const WPA_CONF_FILE = '/etc/wpa_supplicant/wpa_supplicant.conf';
 const HOSTAPD_CONF = '/etc/hostapd/hostapd.conf';
 
-// System always boots in day mode
-var brightnessMode = 'day';
 
 // Gets all system settings supported by the mobile application in JSON format
 function getEZhudSettings() {
@@ -13,8 +11,6 @@ function getEZhudSettings() {
 	console.log('getEZhudSettings() called');
 
 	var currentSettings = {
-		'brightness_mode': getBrightnessMode(),
-		'brightness_level': getBrightnessLevel(),
 		'wifi_mode': getWifiMode(),
 		'wifi_country': getWifiCountry(),
 		'wifi_ssid': getWifiSSID(),
@@ -40,14 +36,6 @@ function setEZhudSettings(newSettings) {
 
 		// TODO: Put the functions into a dictionary to get rid of this switch case
 		switch(key) {
-			case 'brightness_mode':
-				console.log('setEZhudSettings(): brightness_mode');
-				//setBrightnessMode(value);
-				break;
-			case 'brightness_level':
-				console.log('setEZhudSettings(): brightness_level');
-				//setBrightnessLevel(value);
-				break;
 			case 'wifi_mode':
 				console.log('setEZhudSettings(): wifi_mode');
 				//setWifiMode(value);
@@ -89,52 +77,6 @@ function setEZhudSettings(newSettings) {
 	}
 	
 	return getEZhudSettings();
-
-}
-
-function getBrightnessMode() {
-
-	console.log('	getBrightnessMode()');
-	return brightnessMode;
-
-}
-
-function setBrightnessMode(mode) {
-
-	console.log('	setBrightnessMode()');
-
-	return 0;
-
-	// Check we got a valid mode
-	if( mode != 'day' && mode != 'night' ) {
-		console.log(`	setBrightnessMode(): Unexected mode: ${mode}`);
-		return 1;
-	}
-
-	try {
-		console.log(`	setBightnessMode(): Setting brightness mode to ${mode}`);
-		let res = execSync(`csmt state ${mode}`);
-		brightnessMode = mode;
-		return 0;
-	} catch(err) {
-		console.log('	setBrightnessMode(): err', err);
-		console.log('	setBrightnessMode(): stderr', err.stderr.toString());
-	}
-
-	return 1;
-
-}
-
-function getBrightnessLevel() {
-
-	console.log('	Stub getBrightnessLevel()');
-	return 60;
-
-}
-
-function setBrightnessLevel(level) {
-
-	console.log('	Stub setBrightnessLevel()');
 
 }
 
