@@ -11,8 +11,8 @@ function getUpdatedVideoFiles() {
 	var xhttp = new XMLHttpRequest();
 
 	// Set up the request
-	// xhttp.open('GET', baseUrl + '/recordings', true);
-	xhttp.open('GET', '/recordings', true);
+	xhttp.open('GET', baseUrl + '/recordings', true);
+	// xhttp.open('GET', '/recordings', true);
 	xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
 	// Define the callback for when we get a response
@@ -37,7 +37,8 @@ function getVideoFile(file) {
 	var xhttp = new XMLHttpRequest();
 
 	// Set up the request
-	xhttp.open('GET', '/recordings/' + file, true);
+	xhttp.open('GET', baseUrl + '/recordings/' + file, true);
+	// xhttp.open('GET', '/recordings/' + file, true);
 	xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
 	// Define the callback for when we get a response
@@ -68,9 +69,11 @@ function fixshit(fl) {
         }
         str += fl[a];
     }
-    for (var a = 0; a < temp.length; a++) {
-        temp[a] = temp[a].substring(11);
-    }
+
+    // remove "recordings/:
+    // for (var a = 0; a < temp.length; a++) {
+    //     temp[a] = temp[a].substring(11);
+    // }
     return temp;
 }
 
@@ -122,8 +125,6 @@ function updatePage(filelist) {
                 newButton.type = "button";
                 newButton.classList.add('card');
                 newButton.setAttribute('id', arr[x-1]);
-                newButton.textContent = t;
-                newButton.innerHTML = t;
                 newButton.value = t;
                 newButton.addEventListener('click', somefunction);
                 document.getElementById(container_div).appendChild(newButton);
