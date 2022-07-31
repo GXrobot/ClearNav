@@ -89,6 +89,7 @@ html, body {
 .updateFiles {
     display: block;     /* input elements are in-line */
     margin: auto;
+    margin-bottom: 100px;
     font-size: 18px;
     width: 75%;
 }
