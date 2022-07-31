@@ -1,4 +1,6 @@
 const fs = require('fs');
+const path = require('path');
+const RECORD_DIR = "/home/pi/recordings";
 const {exec, execSync} = require('child_process');
 
 const WPA_CONF_FILE = '/etc/wpa_supplicant/wpa_supplicant.conf';
@@ -74,7 +76,117 @@ function setEZhudSettings(newSettings) {
 
 }
 
-// Assumes whatever is set by wpa_cli matches what is in hostapd
+// get all .mp4 files in filesystem generated from dashcam
+// function is used to populate dashcam html page
+function getAllVideoFiles() {
+    console.log('getAllVideoFiles() called');
+
+    const fileList = [];
+    fs.readdir(RECORD_DIR, function (err, files) {
+
+        if (err) {
+            return console.log('Unable to read directory: ' + err);
+        } 
+
+        
+        files.forEach(function (file) {
+
+            // check for mp4 files here
+            
+            fileList.push(file);
+        });
+    });
+
+    return fileList;
+}
+
+// get specific video file
+// function is used when user clicks specific video file
+function fetchVideoFile(file) {
+    console.log('fetchVideoFile() called');
+    // TODO
+}
+
+// TODO: Fix later
+function getWifiMode() {
+
+	console.log('	getWifiMode()');
+
+	return 'Client';
+
+	var bashCmd = `grep ${CS_ENV_FILE} -e ENABLE_HOTSPOT`;
+	var wifiMode = 'Error';
+
+	try {
+		var res = execSync(bashCmd);
+		console.log(`	getWifiMode(): res.toString()=${res.toString()}`);
+		let hotspotEnabled = (res.toString().split('='))[1];
+		console.log(`	getWifiMode(): hotspotEnabled=${hotspotEnabled}`);
+		wifiMode = (hotspotEnabled == 1) ? 'hotspot' : 'client';
+		console.log(`	getWifiMode(): wifiMode=${wifiMode}`);
+	} catch(err) {
+		console.log('	getWifiMode(): err', err);
+		console.log('	getWifiMode(): stderr', err.stderr.toString());
+	}
+
+	return wifiMode;
+
+}
+
+// TODO: Fix later
+function setWifiMode(mode) {
+
+	console.log('	setWifiMode()');
+
+	return 0;
+
+	if( mode != 'hotspot' && mode != 'client' ) {
+		console.log(`	setWifiMode(): Unexpected wifi mode: ${mode}`);
+		return 1;
+	}
+
+	// Wifi mode can be set through crankshaft_env.sh
+	if( mode == 'hotspot' ) {
+		// TODO: Should the previous client ssid and psk be saved?
+		try {
+			// Set hotspot mode
+			execSync(`sudo sed -i 's/ENABLE_HOTSPOT=0/ENABLE_HOTSPOT=1/' ${CS_ENV_FILE}`);
+			// Unset client ssid and psk
+			execSync(`sudo sed -i 's/WIFI_SSID=.*/WIFI_SSID="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI_PSK=.*/WIFI_PSK="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI2_SSID=.*/WIFI2_SSID="sample"/' ${CS_ENV_FILE}`);
+			execSync(`sudo sed -i 's/WIFI2_PSK=.*/WIFI2_PSK="sample"/' ${CS_ENV_FILE}`);
+			// Force recreate wpa_supplicant.conf update
+			execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=0/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+			return 0;
+		} catch(err) {
+			console.log('	setWifiMode(): Failed to set hotspot mode');
+			console.log('	setWifiMode(): err', err);
+			console.log('	setWifiMode(): stderr', err.stderr.toString());
+		}
+	} else if( mode == 'client' ) {
+		try {
+			// Disable hotspot
+			execSync(`sudo sed -i 's/ENABLE_HOTSPOT=1/ENABLE_HOTSPOT=0/' ${CS_ENV_FILE}`);
+			// At this point we cannot know for sure what the wifi credentials will be
+			// Leave them blank. Also means no point in forcing a wpa_supplicant.conf refresh
+			// res = execSync(`sudo sed -i 's/WIFI_UPDATE_CONFIG=*/WIFI_UPDATE_CONFIG=1/' ${CS_ENV_FILE}`);
+			return 0;
+		} catch(err) {
+			console.log('	setWifiMode(): Failed to set client mode');
+			console.log('	setWifiMode(): err', err);
+			console.log('	setWifiMode(): stderr', err.stderr.toString());
+		}
+	} else {
+		console.log(`	setWifiMode(): Unexpected wifi mode: ${mode}`);
+		return 1;
+	}
+
+	return 1;
+
+}
+
+// TODO: Fix later
 function getWifiCountry() {
 
 	console.log('	getWifiCountry()');
@@ -305,5 +417,7 @@ function setWifiPSK(psk) {
 
 module.exports = {
 	getEZhudSettings,
-	setEZhudSettings
+	setEZhudSettings,
+    getAllVideoFiles,
+    fetchVideoFile
 }

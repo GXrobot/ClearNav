@@ -15,7 +15,10 @@ router.get('/*', (req, res, next) => {
 		// Return the current settings
 		console.log('Sending back settings.json');
 		res.send(EZhudSettings.getEZhudSettings());
-	} else {
+	} else if( req.path == '/videoList' ) {
+		console.log('Sending video files list');
+		res.send(EZhudSettings.getAllVideoFiles());
+    } else {
 		// We aren't supposed to get any GET request for anything other than settings.json
 		// Return an error code in this case
 		console.log(`Received an invalid ${req.method} request for '${req.hostname}${req.originalUrl}' from ${req.ip}`);
