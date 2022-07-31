@@ -28,10 +28,11 @@ sg.theme('DarkAmber')
 
 layout = [
     [sg.Text('')], 
-    [sg.Text(size=(8, 2), font=('Helvetica', 50), text_color='White', justification='center', key='speed')],
-    [sg.Text(size=(8, 2), font=('Helvetica', 25), text_color='White', justification='center', key='num_satelites')],
-    [sg.Text(size=(8, 2), font=('Helvetica', 25), text_color='White', justification='center', key='bat_percentage')],
-    [sg.Button("Close", key='Close')]
+    [sg.Text(size=(8, 2), font=('Helvetica', 25), text_color='White', justification='center', key='signal_strength')],
+    [sg.VPush()], 
+    [sg.Text(size=(8, 2), font=('Helvetica', 75), text_color='White', justification='center', key='speed')],
+    [sg.Text(size=(8, 2), font=('Helvetica', 75), text_color='White', justification='center', key='num_satelites')],
+    [sg.VPush()]
 ]
 
 window = sg.Window('GPS Demo', layout, size=sg.Window.get_screen_size(), keep_on_top=None, element_justification='c')
@@ -64,10 +65,31 @@ while True:
         num_satelites = gps.satellites
     if gps.speed_knots is not None:
         current_speed = round(gps.speed_knots * CONVERSION_FACTOR)
+        if current_speed < 5: current_speed = 0
 
     # --------- display speed in window ---------
     window['speed'].update(str(current_speed) + " km/h")
     window['num_satelites'].update("# sat: " + str(num_satelites))
+
+    # --------- display signal strength in window ---------
+
+    # map range (0-22) to range (0-100%)
+    signal_strength = round((num_satelites / float(22)) * float(100))
+
+    # bad signal
+    if num_satelites < 5:
+        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
+        window['signal_strength'].update(text_color='red')
+
+    # okay signal
+    elif num_satelites >= 5 and num_satelites < 10:
+        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
+        window['signal_strength'].update(text_color='yellow')
+
+    # excellent signal
+    else:
+        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
+        window['signal_strength'].update(text_color='green')
 
     # End program if user closes window or presses the OK button
     if event == "Close" or event == sg.WIN_CLOSED:
