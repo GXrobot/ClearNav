@@ -8,6 +8,7 @@ const setHeaders = require('./src/middlewares/setHeaders');
 const updateRouter = require('./src/routes/update');
 const assetsRouter = require('./src/routes/assets');
 const pagesRouter = require('./src/routes/pages');
+const recordingsRouter = require('./src/routes/recordings');
 
 // Define the server
 const app = express();
@@ -24,6 +25,9 @@ app.use('/assets', assetsRouter);
 // Handle requests related to settings
 app.use('/update', updateRouter);
 
+// Serve video files
+app.use('/recordings', recordingsRouter);
+
 // All other requests are either asking for pages (e.g.: index.html) or should return an error
 app.use('/*', pagesRouter);
 
@@ -34,7 +38,7 @@ server.listen(port, () => {
 
 // 	// Adjust the address requests are sent to in index.js
 // 	console.log('Looking for host IP address');
-// 	exec('hostname --all-ip-addresses', (err, stdout, stderr) => {
+ 	exec('hostname --all-ip-addresses', (err, stdout, stderr) => {
 
  		if( err ) {
  			console.log('Failed to find host IP address:', err);
