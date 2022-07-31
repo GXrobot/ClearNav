@@ -2,9 +2,7 @@
 
 const debug = true;
 
-// var baseUrl = "http://169.254.1.2";
-// var baseUrl = "http://10.0.0.18:8080";
-var baseUrl = "localhost:80";
+var baseUrl = "http://169.254.1.2";
 
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
