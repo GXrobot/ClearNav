@@ -1,6 +1,8 @@
 var baseUrl = "localhost";
 // var baseUrl = "http://169.254.1.2";
 
+document.onload = getUpdatedVideoFiles();
+
 // This function queries the server for updated settings
 function getUpdatedVideoFiles() {
     console.log('Called getUpdatedVideoFiles()');
@@ -42,8 +44,6 @@ function getVideoFile(file) {
 	xhttp.onreadystatechange = function() {
 		// Check that the response status code indicates success
 		if( this.readyState == 4 && this.status == 200 ) {
-			// console.log("response: " + this.responseText);
-            
             // open url in new tab
             window.open('/recordings/' + file, '_blank').focus();
         } 
@@ -56,18 +56,14 @@ function getVideoFile(file) {
 function fixshit(fl) {
     var temp = [];
     var str = "";
-    var m = 0;
 
     // construct list
     for (var a = 0; a < fl.length; a++) {
-        if (fl[a] === '"' || fl[a] === '[' || fl[a] === ']') {
-            continue;
-        }
+        if (fl[a] === '"' || fl[a] === '[' || fl[a] === ']') { continue; }
 
         if (fl[a] == ",") {
             temp.push(str);
             str = [];
-            m++;
             continue;
         }
         str += fl[a];
@@ -86,6 +82,7 @@ function updatePage(filelist) {
 
     // object returned by server is one big string, not a list of filename strings
     filelist = fixshit(filelist)
+    console.log("filelist: " + filelist);
 
     // clear videos before repopulating page
     const cards = document.querySelectorAll('.card');
@@ -107,7 +104,6 @@ function updatePage(filelist) {
         // there exists video files on this day
         if (arr.length != 0) {
             daylist.push(arr);
-            // console.log(daylist);
 
             // create header
             document.getElementById("header" + container_count).innerHTML = "August " + day + ", 2022";
@@ -119,16 +115,27 @@ function updatePage(filelist) {
             // add buttons to new video-container div
             for (var x = 1; x < arr.length + 1; x++) {
 
+                // get time from filename
+                var t = get_time(arr[x-1]);
+                console.log(t);
                 var newButton = document.createElement('input');
                 newButton.type = "button";
                 newButton.classList.add('card');
                 newButton.setAttribute('id', arr[x-1]);
+                newButton.textContent = t;
+                newButton.innerHTML = t;
+                newButton.value = t;
                 newButton.addEventListener('click', somefunction);
                 document.getElementById(container_div).appendChild(newButton);
             }
             container_count = container_count + 1;
         }
     }
+}
+
+function get_time(filename) {
+    // remove date and ".mp4"
+    return filename.substring(11, 16);
 }
 
 function somefunction(event) {

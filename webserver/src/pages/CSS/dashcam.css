@@ -26,7 +26,7 @@ html, body {
     background: url(../new_play.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 80px;
+    background-size: 30px;
     width: 24.5%;
     background-color: #eee;
     float: none;
@@ -40,7 +40,7 @@ html, body {
     background: url(../new_play.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 80px;
+    background-size: 30px;
     width: 24.5%;
     background-color: #eee;
     float: none;
@@ -54,7 +54,7 @@ html, body {
     background: url(../new_play.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 80px;
+    background-size: 30px;
     width: 24.5%;
     background-color: #eee;
     float: none;
@@ -62,9 +62,6 @@ html, body {
     margin: 0 0.25%;
     display: inline-block;
     zoom: 1;
-}
-
-.card {
 }
 
 .nav_link-active {
