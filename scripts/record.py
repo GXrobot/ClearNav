@@ -90,7 +90,7 @@ def main():
 
 		# Attach file extensions in the respective calls
 		# Assumes system clock is correct. This may not be a valid assumption
-		filename = RECORD_DIR + datetime.now().strftime("%Y-%m-%d %I-%M%p")
+		filename = RECORD_DIR + datetime.now().strftime("%Y-%m-%d %I_%M%p")
 
 		print(f"main: filename={filename}")
 		
