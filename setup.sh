@@ -79,7 +79,6 @@ sed -i 's/.\/dash/#.\/dash/' ./install.sh
 ./install.sh
 
 # Change some settings
-# All of these settings could be done through raspi-config
 
 # Set menubar to autohide
 echo "Hiding menubar"
