@@ -104,8 +104,8 @@ def main():
 
 		# call() blocks, Popen() doesn't
 		# There is a delay regardless in looping calls, this just lengthens it
-		print(f"main: Calling : {shutil.which('ffmpeg')} -nostdin -i {filename}.h264 -vcodec copy {filename}.mp4; rm {filename}.h264")
-		subprocess.Popen(f"{shutil.which('ffmpeg')} -nostdin -i {filename}.h264 -vcodec copy {filename}.mp4; rm {filename}.h264", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+		print(f"main: Calling : {shutil.which('ffmpeg')} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"")
+		subprocess.Popen(f"{shutil.which('ffmpeg')} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if __name__ == '__main__':
 	main()
