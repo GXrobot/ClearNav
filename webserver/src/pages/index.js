@@ -2,7 +2,7 @@
 
 const debug = true;
 
-var baseUrl = "http://169.254.1.2";
+var baseUrl = `http://${location.hostname}`;
 
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
