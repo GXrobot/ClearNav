@@ -118,7 +118,7 @@ echo "Setting WiFi country"
 sudo raspi-config nonint do_wifi_country CA
 
 echo "Setting time zone"
-sudo raspi-config nonint do_change_timezone PST8PDT
+sudo raspi-config nonint do_change_timezone America/Vancouver
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
 echo "Copying over device tree"
