@@ -1,18 +1,25 @@
 #!/bin/bash
 
-# Update device
+echo "Updating system"
 sudo apt update && sudo apt upgrade -y
 
-# In case this is running from ssh
-export DISPLAY=:0
-
+echo "Installing required packages"
 curl fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
 sudo apt install -y hostapd dnsmasq xdotool curl nodejs
 
+echo "Disabling hostapd, dnsmasq"
 sudo systemctl unmask hostapd.service
 sudo systemctl disable hostapd.service
 sudo systemctl disable dnsmasq.service
 
+echo "Installing Python libraries"
+pip3 install adafruit-circuitpython-gps PySimpleGUI
+
+echo "Installing Node packages"
+cd webserver
+npm install
+
+echo "Writing hostapd.conf"
 sudo bash -c "echo 'country_code=CA
 driver=nl80211
 interface=wlan0
@@ -29,18 +36,14 @@ wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 ' > /etc/hostapd/hostapd.conf"
 
+echo "Writing dnsmasq.conf"
 sudo bash -c "echo 'interface=wlan0
 dhcp-range=10.0.1.2,10.0.1.20,255.255.255.0,24h
 domain=wlan
 address=/EZhud.com/10.0.1.1
 ' > /etc/dnsmasq.conf"
 
-cd webserver
-npm install
-
-cd ..
-pip3 install adafruit-circuitpython-gps PySimpleGUI
-
+echo "Writing web server service file"
 sudo bash -c "echo '[Unit]
 Description=EZhud Web Server
 After=network.target
@@ -56,9 +59,11 @@ ExecStart=/usr/bin/node /home/pi/ClearNav/webserver/app.js
 WantedBy=multi-user.target
 ' > /etc/systemd/system/ezhud-webserver.service"
 
+echo "Setting web server to autostart"
 sudo systemctl daemon-reload
 sudo systemctl enable ezhud-webserver.service
 
+echo "Writing desktop entry"
 sudo bash -c "echo '[Desktop Entry]
 Name=EZhudStartup
 Exec=/bin/bash /home/pi/ClearNav/scripts/ezhud_startup.sh
@@ -66,56 +71,61 @@ Exec=/bin/bash /home/pi/ClearNav/scripts/ezhud_startup.sh
 
 #sudo bash -c "echo '@bash /home/pi/ClearNav/scripts/log_stats.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart"
 
+echo "Cloning OpenDash"
 cd /home/pi
 git clone https://github.com/openDsh/dash.git
 
 cd dash
+
+# Skip starting OpenDash when it is built
+# It blocks the rest of the script until stopped
+sed -i 's/cd ..\/bin/#cd ../bin/' ./install.sh
+sed -i 's/.\/dash/#.\/dash/' ./install.sh
+
+echo "Building OpenDash"
 ./install.sh
 
 # Change some settings
-# All of these settings could be done through raspi-config
 
-# Enable legacy camera
-echo "Enabling camera"
+echo "Setting boot splash"
+sudo cp /usr/share/plymouth/themes/pix/splash.png /usr/share/plymouth/themes/pix/splash.png.background
+sudo cp /home/pi/ClearNav/webserver/src/assets/logo.png /usr/share/plymouth/themes/pix/splash.png
 
-sudo sed -i 's/^#\?camera_auto_detect=[01]//' /boot/config.txt
+echo "Setting desktop background"
+sudo sed -i 's@wallpaper=.*@wallpaper=/usr/share/plymouth/themes/pix/splash.png@' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
+sudo sed -i 's/wallpaper_mode=.*/wallpaper_mode=fit/' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
 
-if grep -qE "^#?start_x=[01]" /boot/config.txt; then
-	sudo sed -i 's/^#\?start_x=[01]/start_x=1/' /boot/config.txt
-else
-	sudo bash -c "echo 'start_x=1' >> /boot/config.txt"
-fi
+echo "Hiding trash bin"
+sudo sed -i 's/show_trash=.*/show_trash=0/' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
 
-if grep -qE "^#?gpu_mem=[1234567890]*" /boot/config.txt; then
-	sudo sed -i 's/^#\?gpu_mem=[1234567890]*/gpu_mem=128/' /boot/config.txt
-else
-	sudo bash -c "echo 'gpu_mem=128' >> /boot/config.txt"
-fi
+echo "Hiding menubar"
+sudo sed -i 's/autohide=./autohide=1/' /etc/xdg/lxpanel/LXDE-pi/panels/panel
+sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /etc/xdg/lxpanel/LXDE-pi/panels/panel
+
+echo "Hiding mouse cursor"
+sudo sed -i 's/#xserver-command=X/xserver-command=X -nocursor/' /etc/lightdm/lightdm.conf
+
+echo "Enabling legacy camera"
+sudo raspi-config nonint do_legacy 0
+
+echo "Enabling UART"
+sudo raspi-config nonint do_serial 2
+
+echo "Disabling screen blanking"
+sudo raspi-config nonint do_blanking 1
+
+echo "Setting WiFi country"
+sudo raspi-config nonint do_wifi_country CA
+
+echo "Setting time zone"
+sudo raspi-config nonint do_change_timezone America/Vancouver
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
 echo "Copying over device tree"
-
 sudo cp WS-dt-blob.bin /boot/dt-blob.bin
 
-# Every time we configure the Pi manually raspi-config switches from KMS to Fake KMS
-echo "Changing to fkms"
-
-if grep -qE "^#?dtoverlay=vc4-f?kms-v3d" /boot/config.txt; then
-	sudo sed -i 's/^#\?dtoverlay=vc4-f\?kms-v3d/dtoverlay=vc4-fkms-v3d/' /boot/config.txt
-else
-	sudo bash -c "echo 'dtoverlay=vc4-fkms-v3d' >> /boot/config.txt"
-fi
-
-# Enable UART
-echo "Enabling UART"
-
-if grep -qE "^#?enable_uart=[01]" /boot/config.txt; then
-	sudo sed -i 's/^#\?enable_uart=[01]/enable_uart=1/' /boot/config.txt
-else
-	sudo bash -c "echo 'enable_uart=1' >> /boot/config.txt"
-fi
-
 # Set HDMI boost to 7
+# Not able to find raspi-config switch for this
 echo "Setting HDMI boost"
 
 if grep -qE "^#?config_hdmi_boost=[01234567]" /boot/config.txt; then
@@ -124,24 +134,8 @@ else
 	sudo bash -c "echo 'config_hdmi_boost=7' >> /boot/config.txt"
 fi
 
-# Disable screen blanking
-# This is copied from raspi-config
-echo "Disabling screen blanking"
-
-sudo rm -f /etc/X11/xorg.conf.d/10-blanking.conf
-sudo sed -i '/^\o033/d' /etc/issue
-
-sudo mkdir /etc/X11/xorg.conf.d/
-sudo cp /usr/share/raspi-config/10-blanking.conf /etc/X11/xorg.conf.d/
-sudo bash -c "printf '\\033[9:0]' >> /etc/issue"
-
-# Set menubar to autohide
-echo "Hiding menubar"
-
-sudo sed -i 's/autohide=./autohide=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
-sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
-
 # Enable the USB port on the CM4
+# Not able to find raspi-config switch for this
 echo "Enabling CM4 USB"
 
 sudo sed -i 's/^#\?otg_mode=[01]//' /boot/config.txt
@@ -152,11 +146,8 @@ else
 	sudo bash -c "echo 'dtoverlay=dwc2,dr_mode=host' >> /boot/config.txt"
 fi
 
-# Change hostname
 echo "Changing hostname"
-
-sudo sed -i 's/.*/EZhud/' /etc/hostname
-sudo sed -i 's/127.0.1.1.*/127.0.1.1\tEZhud/g' /etc/hosts
+sudo raspi-config nonint do_hostname 'EZhud'
 
 sync
 
@@ -165,4 +156,3 @@ sleep 5
 sudo reboot
 
 exit 0
-
