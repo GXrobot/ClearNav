@@ -11,7 +11,7 @@ fi
 
 # OpenDash's own service is broken, start ourselves
 /home/pi/dash/bin/dash &
-/home/pi/ClearNav/GPS/serial_read_gui.py &
+/home/pi/ClearNav/scripts/serial_read_gui.py &
 /home/pi/ClearNav/scripts/check_nw.sh &
 /home/pi/ClearNav/scripts/swap_windows.py &
 #/home/pi/ClearNav/scripts/bt_pair.py &
