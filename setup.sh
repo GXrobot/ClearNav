@@ -1,18 +1,25 @@
 #!/bin/bash
 
-# Update device
+echo "Updating system"
 sudo apt update && sudo apt upgrade -y
 
-# In case this is running from ssh
-export DISPLAY=:0
-
+echo "Installing required packages"
 curl fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
 sudo apt install -y hostapd dnsmasq xdotool curl nodejs
 
+echo "Disabling hostapd, dnsmasq"
 sudo systemctl unmask hostapd.service
 sudo systemctl disable hostapd.service
 sudo systemctl disable dnsmasq.service
 
+echo "Installing Python libraries"
+pip3 install adafruit-circuitpython-gps PySimpleGUI
+
+echo "Installing Node packages"
+cd webserver
+npm install
+
+echo "Writing hostapd.conf"
 sudo bash -c "echo 'country_code=CA
 driver=nl80211
 interface=wlan0
@@ -29,18 +36,14 @@ wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 ' > /etc/hostapd/hostapd.conf"
 
+echo "Writing dnsmasq.conf"
 sudo bash -c "echo 'interface=wlan0
 dhcp-range=10.0.1.2,10.0.1.20,255.255.255.0,24h
 domain=wlan
 address=/EZhud.com/10.0.1.1
 ' > /etc/dnsmasq.conf"
 
-cd webserver
-npm install
-
-cd ..
-pip3 install adafruit-circuitpython-gps PySimpleGUI
-
+echo "Writing web server service file"
 sudo bash -c "echo '[Unit]
 Description=EZhud Web Server
 After=network.target
@@ -56,9 +59,11 @@ ExecStart=/usr/bin/node /home/pi/ClearNav/webserver/app.js
 WantedBy=multi-user.target
 ' > /etc/systemd/system/ezhud-webserver.service"
 
+echo "Setting web server to autostart"
 sudo systemctl daemon-reload
 sudo systemctl enable ezhud-webserver.service
 
+echo "Writing desktop entry"
 sudo bash -c "echo '[Desktop Entry]
 Name=EZhudStartup
 Exec=/bin/bash /home/pi/ClearNav/scripts/ezhud_startup.sh
@@ -66,6 +71,7 @@ Exec=/bin/bash /home/pi/ClearNav/scripts/ezhud_startup.sh
 
 #sudo bash -c "echo '@bash /home/pi/ClearNav/scripts/log_stats.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart"
 
+echo "Cloning OpenDash"
 cd /home/pi
 git clone https://github.com/openDsh/dash.git
 
@@ -76,6 +82,7 @@ cd dash
 sed -i 's/cd ..\/bin/#cd ../bin/' ./install.sh
 sed -i 's/.\/dash/#.\/dash/' ./install.sh
 
+echo "Building OpenDash"
 ./install.sh
 
 # Change some settings
@@ -136,7 +143,6 @@ else
 	sudo bash -c "echo 'dtoverlay=dwc2,dr_mode=host' >> /boot/config.txt"
 fi
 
-# Change hostname
 echo "Changing hostname"
 sudo raspi-config nonint do_hostname 'EZhud'
 
