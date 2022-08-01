@@ -87,10 +87,6 @@ echo "Building OpenDash"
 
 # Change some settings
 
-echo "Hiding menubar"
-sudo sed -i 's/autohide=./autohide=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
-sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
-
 echo "Setting boot splash"
 sudo cp /usr/share/plymouth/themes/pix/splash.png /usr/share/plymouth/themes/pix/splash.png.background
 sudo cp /home/pi/ClearNav/webserver/src/assets/logo.png /usr/share/plymouth/themes/pix/splash.png
@@ -101,6 +97,13 @@ sudo sed -i 's/wallpaper_mode=.*/wallpaper_mode=fit/' /etc/xdg/pcmanfm/LXDE-pi/d
 
 echo "Hiding trash bin"
 sudo sed -i 's/show_trash=.*/show_trash=0/' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
+
+echo "Hiding menubar"
+sudo sed -i 's/autohide=./autohide=1/' /etc/xdg/lxpanel/LXDE-pi/panels/panel
+sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /etc/xdg/lxpanel/LXDE-pi/panels/panel
+
+echo "Hiding mouse cursor"
+sudo sed -i 's/#xserver-command=X/xserver-command=X -nocursor/' /etc/lightdm/lightdm.conf
 
 echo "Enabling legacy camera"
 sudo raspi-config nonint do_legacy 0
