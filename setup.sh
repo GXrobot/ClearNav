@@ -80,17 +80,14 @@ sed -i 's/.\/dash/#.\/dash/' ./install.sh
 
 # Change some settings
 
-# Set menubar to autohide
 echo "Hiding menubar"
 sudo sed -i 's/autohide=./autohide=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
 sudo sed -i 's/heightwhenhidden=./heightwhenhidden=1/' /home/pi/.config/lxpanel/LXDE-pi/panels/panel
 
-# Set boot splash
 echo "Setting boot splash"
 sudo cp /usr/share/plymouth/themes/pix/splash.png /usr/share/plymouth/themes/pix/splash.png.background
 sudo cp /home/pi/ClearNav/webserver/src/assets/logo.png /usr/share/plymouth/themes/pix/splash.png
 
-# Set desktop background, hide trash bin
 echo "Setting desktop background"
 sudo sed -i 's@wallpaper=.*@wallpaper=/usr/share/plymouth/themes/pix/splash.png@' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
 sudo sed -i 's/wallpaper_mode=.*/wallpaper_mode=fit/' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
@@ -98,17 +95,24 @@ sudo sed -i 's/wallpaper_mode=.*/wallpaper_mode=fit/' /etc/xdg/pcmanfm/LXDE-pi/d
 echo "Hiding trash bin"
 sudo sed -i 's/show_trash=.*/show_trash=0/' /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
 
-# Enable legacy camera
 echo "Enabling legacy camera"
 sudo raspi-config nonint do_legacy 0
+
+echo "Enabling UART"
+sudo raspi-config nonint do_serial 2
+
+echo "Disabling screen blanking"
+sudo raspi-config nonint do_blanking 1
+
+echo "Setting WiFi country"
+sudo raspi-config nonint do_wifi_country CA
+
+echo "Setting time zone"
+sudo raspi-config nonint do_change_timezone PST8PDT
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
 echo "Copying over device tree"
 sudo cp WS-dt-blob.bin /boot/dt-blob.bin
-
-# Enable UART
-echo "Enabling UART"
-sudo raspi-config nonint do_serial 2
 
 # Set HDMI boost to 7
 # Not able to find raspi-config switch for this
@@ -119,11 +123,6 @@ if grep -qE "^#?config_hdmi_boost=[01234567]" /boot/config.txt; then
 else
 	sudo bash -c "echo 'config_hdmi_boost=7' >> /boot/config.txt"
 fi
-
-# Disable screen blanking
-# This is copied from raspi-config
-echo "Disabling screen blanking"
-sudo raspi-config nonint do_blanking 1
 
 # Enable the USB port on the CM4
 # Not able to find raspi-config switch for this
