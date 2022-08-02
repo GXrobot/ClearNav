@@ -36,7 +36,7 @@ router.get('/*', (req, res, next) => {
 	}
 
 	// Build the correct path to the video
-	filePath = path.resolve(__dirname, '../..' + req.originalUrl);
+	filePath = decodeURI(path.resolve(__dirname, '../..' + req.originalUrl));
 	console.log(`filePath=${filePath}`);
 
 	// Check if the file exists
