@@ -122,7 +122,7 @@ sudo raspi-config nonint do_change_timezone America/Vancouver
 
 # The WaveShare CM4-NANO-B requires a custom device tree for camera support
 echo "Copying over device tree"
-sudo cp WS-dt-blob.bin /boot/dt-blob.bin
+sudo cp /home/pi/ClearNav/WS-dt-blob.bin /boot/dt-blob.bin
 
 # Set HDMI boost to 7
 # Not able to find raspi-config switch for this
