@@ -11,8 +11,8 @@ function getUpdatedVideoFiles() {
 	var xhttp = new XMLHttpRequest();
 
 	// Set up the request
-	xhttp.open('GET', baseUrl + '/recordings', true);
-	// xhttp.open('GET', '/recordings', true);
+	// xhttp.open('GET', baseUrl + '/recordings', true);
+	xhttp.open('GET', '/recordings', true);
 	xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
 	// Define the callback for when we get a response
@@ -37,8 +37,8 @@ function getVideoFile(file) {
 	var xhttp = new XMLHttpRequest();
 
 	// Set up the request
-	xhttp.open('GET', baseUrl + '/recordings/' + file, true);
-	// xhttp.open('GET', '/recordings/' + file, true);
+	// xhttp.open('GET', baseUrl + '/recordings/' + file, true);
+	xhttp.open('GET', '/recordings/' + file, true);
 	xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
 	// Define the callback for when we get a response
@@ -70,10 +70,6 @@ function fixshit(fl) {
         str += fl[a];
     }
 
-    // remove "recordings/:
-    // for (var a = 0; a < temp.length; a++) {
-    //     temp[a] = temp[a].substring(11);
-    // }
     return temp;
 }
 
@@ -134,9 +130,25 @@ function updatePage(filelist) {
     }
 }
 
+// get time (e.g, 11:37PM) from filename
 function get_time(filename) {
-    // remove date and ".mp4"
-    return filename.substring(11, 16);
+    console.log("filename: " + filename);
+
+    var t = "";
+
+    // -5 because .mp4
+    for (var i = filename.length - 5; i >= 0; i--) {
+        t = filename[i] + t;
+        if (filename[i] == " ") {
+            break;
+        }
+    }
+
+    // replace _ with :
+    t = t.replace("_", ":");
+
+    console.log("time: " + t);
+    return t;
 }
 
 function somefunction(event) {

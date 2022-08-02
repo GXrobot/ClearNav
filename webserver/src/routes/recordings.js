@@ -18,10 +18,10 @@ router.get('/*', (req, res, next) => {
 		var videoList = [];
 
 		try {
-			let res = execSync('find ../../recordings/*.mp4 -printf "%f\n"');
+			// let res = execSync('find ../../recordings/*.mp4 -printf "%f\n"');
 
             // for MacOS:
-            // let res = execSync('ls recordings/*.mp4');
+            let res = execSync('ls recordings/*.mp4');
 
 			videoList = res.toString().split('\n');
 
