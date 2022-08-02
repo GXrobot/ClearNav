@@ -21,7 +21,6 @@ function getEZhudSettings() {
 	console.log(`getEZhudSettings(): Returning ${JSON.stringify(currentSettings)}`);
 
 	return JSON.stringify(currentSettings);
-
 }
 
 // Sets system settings given and returns the updated values in JSON format

@@ -11,7 +11,7 @@ import RPi.GPIO as GPIO
 from datetime import datetime
 
 CAM_GPIO = 20
-RECORD_LENGTH = 5 * 60 # 5 minutes
+RECORD_LENGTH = 60 # 1 minute
 DEBOUNCE_TIME = 250 # ms
 RECORD_DIR = "/home/pi/recordings/"
 FFMPEG_BIN = shutil.which('ffmpeg')
@@ -90,7 +90,7 @@ def main():
 
 		# Attach file extensions in the respective calls
 		# Assumes system clock is correct. This may not be a valid assumption
-		filename = RECORD_DIR + datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+		filename = RECORD_DIR + datetime.now().strftime("%Y-%m-%d %I_%M%p")
 
 		print(f"main: filename={filename}")
 		
@@ -104,8 +104,8 @@ def main():
 
 		# call() blocks, Popen() doesn't
 		# There is a delay regardless in looping calls, this just lengthens it
-		print(f"main: Calling : {shutil.which('ffmpeg')} -nostdin -i {filename}.h264 -vcodec copy {filename}.mp4; rm {filename}.h264")
-		subprocess.Popen(f"{shutil.which('ffmpeg')} -nostdin -i {filename}.h264 -vcodec copy {filename}.mp4; rm {filename}.h264", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+		print(f"main: Calling : {shutil.which('ffmpeg')} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"")
+		subprocess.Popen(f"{shutil.which('ffmpeg')} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if __name__ == '__main__':
 	main()

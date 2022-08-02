@@ -19,8 +19,12 @@ router.get('/*', (req, res, next) => {
 
 		try {
 			let res = execSync('find ../../recordings/*.mp4 -printf "%f\n"');
+
+            // for MacOS:
+            // let res = execSync('ls recordings/*.mp4');
+
 			videoList = res.toString().split('\n');
-			console.log(videoList);
+
 		} catch(err) {
 			console.log('Failed to get list of videos');
 			console.log('err', err);
@@ -32,7 +36,7 @@ router.get('/*', (req, res, next) => {
 	}
 
 	// Build the correct path to the video
-	filePath = path.resolve(__dirname, '../..' + req.originalUrl);
+	filePath = decodeURI(path.resolve(__dirname, '../..' + req.originalUrl));
 	console.log(`filePath=${filePath}`);
 
 	// Check if the file exists
