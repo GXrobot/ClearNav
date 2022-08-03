@@ -3,8 +3,6 @@
 const debug = true;
 
 var baseUrl = window.location.origin;
-// var baseUrl = "http://169.254.1.2";
-// var baseUrl = "localhost";
 
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
