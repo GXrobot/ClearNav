@@ -10,6 +10,7 @@ import time
 import serial
 import adafruit_gps
 import PySimpleGUI as sg
+import subprocess
 
 uart = serial.Serial(
         # try ports ttyS0, ttyUSB0, ttyAMA0 if not working
@@ -28,14 +29,14 @@ sg.theme('DarkAmber')
 
 layout = [
     [sg.Text('')], 
-    [sg.Text(size=(8, 2), font=('Helvetica', 50), text_color='White', justification='center', key='speed')],
-    [sg.Text(size=(8, 2), font=('Helvetica', 25), text_color='White', justification='center', key='num_satelites')],
-    [sg.Text(size=(8, 2), font=('Helvetica', 25), text_color='White', justification='center', key='bat_percentage')],
-    [sg.Button("Close", key='Close')]
+    [sg.Text(size=(80, 2), font=('Helvetica', 25), text_color='White', justification='center', key='signal_strength')],
+    [sg.VPush()], 
+    [sg.Text(size=(8, 2), font=('Helvetica', 75), text_color='White', justification='center', key='speed')],
+    [sg.VPush()],
+    [sg.Text(size=(80, 2), font=('Helvetica', 25), text_color='White', justification='center', key='address')]
 ]
 
 window = sg.Window('GPS Demo', layout, size=sg.Window.get_screen_size(), keep_on_top=None, element_justification='c')
-# window.Maximize()
 
 # Initialize the GPS module
 gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")  # Turn on the basic GGA and RMC info (what you typically want)
@@ -44,6 +45,7 @@ gps.send_command(b"PMTK220,1000")   # Set update rate to once a second (1hz)
 # Main loop
 current_speed = 0
 num_satelites = 0
+ip_address = subprocess.check_output(['hostname', '--all-ip-addresses']).decode("utf-8").split(' ' )[0]
 CONVERSION_FACTOR = 1.852       # knots to km/h
 last_print = time.monotonic()
 while True:
@@ -64,10 +66,33 @@ while True:
         num_satelites = gps.satellites
     if gps.speed_knots is not None:
         current_speed = round(gps.speed_knots * CONVERSION_FACTOR)
+        if current_speed < 5: current_speed = 0
 
     # --------- display speed in window ---------
     window['speed'].update(str(current_speed) + " km/h")
-    window['num_satelites'].update("# sat: " + str(num_satelites))
+
+    # --------- display signal strength in window ---------
+
+    # map range (0-22) to range (0-100%)
+    signal_strength = round((num_satelites / float(22)) * float(100))
+
+    # bad signal
+    if num_satelites < 5:
+        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
+        window['signal_strength'].update(text_color='red')
+
+    # okay signal
+    elif num_satelites >= 5 and num_satelites < 10:
+        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
+        window['signal_strength'].update(text_color='yellow')
+
+    # excellent signal
+    else:
+        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
+        window['signal_strength'].update(text_color='green')
+
+    # --------- display ip address in window ---------
+    window['address'].update("IP ADDRESS: " + str(ip_address))
 
     # End program if user closes window or presses the OK button
     if event == "Close" or event == sg.WIN_CLOSED:
