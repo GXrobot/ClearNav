@@ -11,6 +11,7 @@ import serial
 import adafruit_gps
 import PySimpleGUI as sg
 import subprocess
+import os
 
 uart = serial.Serial(
         # try ports ttyS0, ttyUSB0, ttyAMA0 if not working
@@ -29,7 +30,7 @@ sg.theme('DarkAmber')
 
 layout = [
     [sg.Text('')], 
-    [sg.Text(size=(80, 2), font=('Helvetica', 25), text_color='White', justification='center', key='signal_strength')],
+    [sg.Text(size=(80, 2), font=('Helvetica', 25), text_color='White', justification='center', key='info_bar')],
     [sg.VPush()], 
     [sg.Text(size=(8, 2), font=('Helvetica', 75), text_color='White', justification='center', key='speed')],
     [sg.VPush()],
@@ -70,25 +71,16 @@ while True:
     # --------- display speed in window ---------
     window['speed'].update(str(current_speed) + " km/h")
 
-    # --------- display signal strength in window ---------
-
+    # --------- display info_bar in window ---------
     # map range (0-22) to range (0-100%)
-    signal_strength = round((num_satelites / float(22)) * float(100))
+    signal = round((num_satelites / float(22)) * float(100))
 
-    # bad signal
-    if num_satelites < 5:
-        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
-        window['signal_strength'].update(text_color='red')
-
-    # okay signal
-    elif num_satelites >= 5 and num_satelites < 10:
-        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
-        window['signal_strength'].update(text_color='yellow')
-
-    # excellent signal
+    if os.path.isfile("/tmp/recording"):
+        recording_status = "recording"
     else:
-        window['signal_strength'].update("Signal: " + str(signal_strength) + "%")
-        window['signal_strength'].update(text_color='green')
+        recording_status = "not recording"
+
+    window['info_bar'].update("Signal: " + str(signal) + "%, " + "Dashcam: " + recording_status)
 
     # --------- display ip address in window ---------
     ip_address = subprocess.check_output(['hostname', '--all-ip-addresses']).decode("utf-8").split(' ' )[0]
