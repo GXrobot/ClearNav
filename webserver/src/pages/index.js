@@ -1,8 +1,8 @@
 // Example/debugging code for server backend communication
 
-const debug = true;
+const debug = false;
 
-var baseUrl = window.location.origin;
+var baseUrl = "http://192.168.253.55";
 
 // https://www.w3schools.com/whatis/whatis_ajax.asp
 
