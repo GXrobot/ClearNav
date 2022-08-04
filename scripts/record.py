@@ -33,6 +33,8 @@ def signal_handler(sig, frame):
 		camera.stop_recording()
 		subprocess.Popen(CONV_ALL_CMD, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	camera.close()
+	if os.path.isfile(FLAG_FILE)
+		subprocess.run(UNSET_FLAG_CMD)
 	sys.exit(130)
 
 def cam_irq(channel):
