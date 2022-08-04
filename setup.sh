@@ -69,19 +69,19 @@ Name=EZhudStartup
 Exec=/bin/bash /home/pi/ClearNav/scripts/ezhud_startup.sh
 ' > /etc/xdg/autostart/display.desktop"
 
-echo "Backing up wpa_supplicant.conf"
-sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bak
+#echo "Backing up wpa_supplicant.conf"
+#sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bak
 
-echo "Writing blank wpa_supplicant.conf"
-sudo bash -c "echo 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=CA
+#echo "Writing blank wpa_supplicant.conf"
+#sudo bash -c "echo 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+#update_config=1
+#country=CA
 
-network={
-	ssid=\"placeholder_ssid\"
-	psk=\"placeholder_psd\"
-}
-' > /etc/wpa_supplicant/wpa_supplicant.conf"
+#network={
+#	ssid=\"placeholder_ssid\"
+#	psk=\"placeholder_psd\"
+#}
+#' > /etc/wpa_supplicant/wpa_supplicant.conf"
 
 #sudo bash -c "echo '@bash /home/pi/ClearNav/scripts/log_stats.sh' >> /etc/xdg/lxsession/LXDE-pi/autostart"
 
