@@ -6,6 +6,7 @@ import sys
 import threading
 import subprocess
 import shutil
+import shlex
 import os
 import RPi.GPIO as GPIO
 from datetime import datetime
@@ -14,8 +15,11 @@ CAM_GPIO = 20
 RECORD_LENGTH = 60 # 1 minute
 DEBOUNCE_TIME = 250 # ms
 RECORD_DIR = "/home/pi/recordings/"
+FLAG_FILE = "/tmp/recording"
 FFMPEG_BIN = shutil.which('ffmpeg')
-CONV_ALL_CMD = 'for i in %s*.h264; do ffmpeg -nostdin -i "$i" -vcodec copy "${i%%.*}.mp4"; rm "$i"; done' % RECORD_DIR
+CONV_ALL_CMD = f'for i in {RECORD_DIR}*.h264; do {FFMPEG_BIN} -nostdin -i "$i" -vcodec copy "${i%%.*}.mp4"; rm "$i"; done'
+SET_FLAG_CMD = f'touch {FLAG_FILE}'
+UNSET_FLAG_CMD = f'rm {FLAG_FILE}'
 
 state_evt = threading.Event()
 camera = picamera.PiCamera()
@@ -78,15 +82,20 @@ def main():
 	camera.resolution = (1280, 720)
 	camera.framerate = 25
 
+	# We are signaling to other scripts that we are recording by setting a flag file
+	subprocess.run(shlex.split(SET_FLAG_CMD))
+
 	while True:
 
 		print('main: Top of loop')
 
 		if not record:
 			print('main: record=False, waiting for state_evt')
+			subprocess.run(shlex.split(UNSET_FLAG_CMD))
 			state_evt.wait()
 			print('main: state_evt set, unsetting')
 			state_evt.clear()
+			subprocess.run(shlex.split(SET_FLAG_CMD))
 
 		# Attach file extensions in the respective calls
 		# Assumes system clock is correct. This may not be a valid assumption
@@ -104,8 +113,8 @@ def main():
 
 		# call() blocks, Popen() doesn't
 		# There is a delay regardless in looping calls, this just lengthens it
-		print(f"main: Calling : {shutil.which('ffmpeg')} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"")
-		subprocess.Popen(f"{shutil.which('ffmpeg')} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+		print(f"main: Calling : {FFMPEG_BIN} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"")
+		subprocess.Popen(f"{FFMPEG_BIN} -nostdin -i \"{filename}.h264\" -vcodec copy \"{filename}.mp4\"; rm \"{filename}.h264\"", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if __name__ == '__main__':
 	main()
