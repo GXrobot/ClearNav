@@ -103,11 +103,13 @@ function updatePage(filelist) {
         if (arr.length != 0) {
             daylist.push(arr);
 
-            // create header
-            document.getElementById("header" + container_count).innerHTML = "August " + day + ", 2022";
 
             // show 3 recent days for which files exist
             if (container_count > 3) { break; }
+
+            // create header
+            document.getElementById("header" + container_count).innerHTML = "August " + day + ", 2022";
+
             var container_div = "video-container" + container_count;
 
             // add buttons to new video-container div

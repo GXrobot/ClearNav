@@ -45,7 +45,6 @@ gps.send_command(b"PMTK220,1000")   # Set update rate to once a second (1hz)
 # Main loop
 current_speed = 0
 num_satelites = 0
-ip_address = subprocess.check_output(['hostname', '--all-ip-addresses']).decode("utf-8").split(' ' )[0]
 CONVERSION_FACTOR = 1.852       # knots to km/h
 last_print = time.monotonic()
 while True:
@@ -92,6 +91,7 @@ while True:
         window['signal_strength'].update(text_color='green')
 
     # --------- display ip address in window ---------
+    ip_address = subprocess.check_output(['hostname', '--all-ip-addresses']).decode("utf-8").split(' ' )[0]
     window['address'].update("IP ADDRESS: " + str(ip_address))
 
     # End program if user closes window or presses the OK button
