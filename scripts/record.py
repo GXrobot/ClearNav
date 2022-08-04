@@ -17,7 +17,7 @@ DEBOUNCE_TIME = 250 # ms
 RECORD_DIR = "/home/pi/recordings/"
 FLAG_FILE = "/tmp/recording"
 FFMPEG_BIN = shutil.which('ffmpeg')
-CONV_ALL_CMD = f'for i in {RECORD_DIR}*.h264; do {FFMPEG_BIN} -nostdin -i "$i" -vcodec copy "${i%%.*}.mp4"; rm "$i"; done'
+CONV_ALL_CMD = 'for i in %s*.h264; do %s -nostdin -i "$i" -vcodec copy "${i%%.*}.mp4"; rm "$i"; done' % (RECORD_DIR, FFMPEG_BIN)
 SET_FLAG_CMD = f'touch {FLAG_FILE}'
 UNSET_FLAG_CMD = f'rm {FLAG_FILE}'
 
