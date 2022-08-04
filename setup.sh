@@ -148,6 +148,16 @@ else
 	sudo bash -c "echo 'config_hdmi_boost=7' >> /boot/config.txt"
 fi
 
+# Force HDMI hotplug
+# The only switch I could find that sets this requires setting HDMI mode to 0
+echo "Forcing HDMI hotplug"
+
+if grep -qE "&#?hdmi_force_hotplug=.*" /boot/config.txt; then
+	sudo sed -i 's/^#\?hdmi_force_hotplug=.*/hdmi_force_hotplug=1/' /boot/config.txt
+else
+	sudo bash -c "echo 'hdmi_force_hotplug=1' >> /boot/config.txt"
+fi
+
 # Enable the USB port on the CM4
 # Not able to find raspi-config switch for this
 echo "Enabling CM4 USB"
