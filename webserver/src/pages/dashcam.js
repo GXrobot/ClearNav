@@ -44,8 +44,9 @@ function getVideoFile(file) {
 	xhttp.onreadystatechange = function() {
 		// Check that the response status code indicates success
 		if( this.readyState == 4 && this.status == 200 ) {
-            // open url in new tab
-            window.open('/recordings/' + file, '_blank').focus();
+		    // open url in new tab
+		    // window.open('/recordings/' + file, '_blank').focus();
+		    window.open('/recordings/' + file, '_self').focus();
         } 
     };
 	// Send the request

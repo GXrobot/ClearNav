@@ -1,6 +1,6 @@
 // Example/debugging code for server backend communication
 
-const debug = true;
+const debug = false;
 
 var baseUrl = window.location.origin;
 

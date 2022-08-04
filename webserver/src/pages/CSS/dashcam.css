@@ -23,10 +23,10 @@ html, body {
 }
 
 #video-container1 .card {
-    background: url(../new_play.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 30px;
+    /* background: url(../new_play.png); */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
+    /* background-size: 30px; */
     width: 24.5%;
     background-color: #eee;
     float: none;
@@ -37,10 +37,10 @@ html, body {
 }
 
 #video-container2 .card {
-    background: url(../new_play.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 30px;
+    /* background: url(../new_play.png); */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
+    /* background-size: 30px; */
     width: 24.5%;
     background-color: #eee;
     float: none;
@@ -51,10 +51,10 @@ html, body {
 }
 
 #video-container3 .card {
-    background: url(../new_play.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 30px;
+    /* background: url(../new_play.png); */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
+    /* background-size: 30px; */
     width: 24.5%;
     background-color: #eee;
     float: none;
