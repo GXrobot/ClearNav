@@ -14,6 +14,7 @@ from datetime import datetime
 CAM_GPIO = 25
 RECORD_LENGTH = 60 # 1 minute
 DEBOUNCE_TIME = 100 # ms
+CAM_BITRATE = 5000000 # bits per second
 RECORD_DIR = "/home/pi/recordings/"
 FLAG_FILE = "/tmp/recording"
 FFMPEG_BIN = shutil.which('ffmpeg')
@@ -106,7 +107,7 @@ def main():
 		print(f"main: filename={filename}")
 		
 		print(f"main: Starting recording for {RECORD_LENGTH} seconds")
-		camera.start_recording(filename + ".h264")
+		camera.start_recording(filename + ".h264", bitrate=CAM_BITRATE)
 		camera.wait_recording(RECORD_LENGTH)
 		if camera.recording: # May have stopped recording in the interrupt handler
 			camera.stop_recording()
