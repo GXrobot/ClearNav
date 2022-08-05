@@ -11,9 +11,9 @@ import os
 import RPi.GPIO as GPIO
 from datetime import datetime
 
-CAM_GPIO = 20
+CAM_GPIO = 25
 RECORD_LENGTH = 60 # 1 minute
-DEBOUNCE_TIME = 250 # ms
+DEBOUNCE_TIME = 100 # ms
 RECORD_DIR = "/home/pi/recordings/"
 FLAG_FILE = "/tmp/recording"
 FFMPEG_BIN = shutil.which('ffmpeg')

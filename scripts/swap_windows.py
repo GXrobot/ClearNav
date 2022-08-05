@@ -5,8 +5,8 @@ import sys
 import subprocess
 import RPi.GPIO as GPIO
 
-BTN_GPIO = 21
-DEBOUNCE_TIME = 250 # ms
+BTN_GPIO = 8
+DEBOUNCE_TIME = 100 # ms
 
 def signal_handler(sig, frame):
 	print("signal_handler: Called")
