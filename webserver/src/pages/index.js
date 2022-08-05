@@ -35,22 +35,18 @@ function getEZhudSettings() {
 // Expects the settings and their values to be returned as a JSON
 function sendEZhudSettings() {
 
-    var country = document.querySelector(`[id=country-names]`);
-    var wifi_mode = document.querySelector(`[id=mode-names]`);
     var wifi_ssid = document.getElementById('wifi-ssid');
     var wifi_psk = document.getElementById('wifi-psk');
 
     // incomplete settings by user
-    if (country.value === "Choose..." || wifi_mode.value === "Choose..." || wifi_ssid.value === "" || wifi_psk.value === "") {
+    if (wifi_ssid.value === "" || wifi_psk.value === "") {
         alert("Incomplete Settings. Please try again");
         return;
     }
 
 	// Create the key value pairs of settings
 	// var updatedSettings = "testkey1=testvalue1&testkey2=testvalue2";
-	var updatedSettings = "wifi_mode=" + wifi_mode.value + 
-                          "&wifi_country=" + country.value + 
-                          "&wifi_ssid=" + wifi_ssid.value + 
+	var updatedSettings = "wifi_ssid=" + wifi_ssid.value + 
                           "&wifi_psk=" + wifi_psk.value;
 
 	// Create the http request object
