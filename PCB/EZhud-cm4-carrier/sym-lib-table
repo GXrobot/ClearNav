@@ -1,0 +1,6 @@
+(sym_lib_table
+  (lib (name "CM4IO")(type "KiCad")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier/libraries/CM4IO/CM4IO.kicad_sym")(options "")(descr ""))
+  (lib (name "Adafruit PowerBoost 1000C Rev B-eagle-import")(type "KiCad")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier/libraries/Adafruit PowerBoost 1000C Rev B-eagle-import.kicad_sym")(options "")(descr ""))
+  (lib (name "46765-1001")(type "Legacy")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier/libraries/46765-1001.lib")(options "")(descr ""))
+  (lib (name "USB-A-S-X-X-TH")(type "Legacy")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier_edited_Taimoor/EZhud-cm4-carrier/EZhud-cm4-carrier/libraries/USB-A-S-X-X-TH/USB-A-S-X-X-TH.lib")(options "")(descr ""))
+)

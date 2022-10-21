@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name "Adafruit PowerBoost 1000C Rev B")(type "KiCad")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier/libraries/Adafruit PowerBoost 1000C Rev B.pretty")(options "")(descr ""))
+  (lib (name "CM4IO")(type "KiCad")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier/libraries/CM4IO/CM4IO.pretty")(options "")(descr ""))
+  (lib (name "USB-A-S-X-X-TH")(type "KiCad")(uri "E:/Capstone-PCB designing/EZhud-cm4-carrier_edited_Taimoor/EZhud-cm4-carrier/EZhud-cm4-carrier/libraries/USB-A-S-X-X-TH")(options "")(descr ""))
+)
