@@ -1,5 +1,7 @@
 This folder contains all the 3D design in the EZhud project
 
+Lead by: William Xue
+
 - Vufine Holder (Balljoint Top.step)
 ```
 Contains a 2 part design, main part attached to the upper lip of the helmet, 
